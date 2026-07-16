@@ -5,6 +5,8 @@ set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS ON)
 
+find_package(X11 REQUIRED)
+
 set(DOOM_SOURCES
     src/doomdef.c
     src/doomstat.c
@@ -73,4 +75,15 @@ add_executable(doom ${DOOM_SOURCES})
 
 target_include_directories(doom PRIVATE
     src
+)
+
+target_include_directories(doom PRIVATE
+    src
+    ${X11_INCLUDE_DIR}
+)
+
+target_link_libraries(doom PRIVATE
+    ${X11_LIBRARIES}
+    ${X11_Xext_LIB}
+    m
 )
