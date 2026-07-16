@@ -8,6 +8,7 @@ set(CMAKE_C_EXTENSIONS ON)
 find_package(X11 REQUIRED)
 
 set(DOOM_SOURCES
+    src/i_main.c
     src/doomdef.c
     src/doomstat.c
     src/dstrings.c

@@ -13,6 +13,8 @@
 #include "doomdef.h"
 #include "i_sound.h"
 
+char *sndserver_filename = "";
+
 void I_SetChannels(void)
 {
 }
