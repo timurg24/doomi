@@ -87,3 +87,7 @@ target_link_libraries(doom PRIVATE
     ${X11_Xext_LIB}
     m
 )
+
+if(UNIX)
+    target_compile_definitions(doom PRIVATE NORMALUNIX)
+endif()

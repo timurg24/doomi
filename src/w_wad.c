@@ -26,16 +26,28 @@ static const char
 rcsid[] = "$Id: w_wad.c,v 1.5 1997/02/03 16:47:57 b1 Exp $";
 
 
-#ifdef NORMALUNIX
-#include <ctype.h>
+#include <stdlib.h>
 #include <sys/types.h>
-#include <string.h>
-#include <unistd.h>
-#include <malloc.h>
-#include <fcntl.h>
 #include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <ctype.h>
+#include <string.h>
+
+
+#if defined(_WIN32)
+#include <io.h>
+#ifndef O_BINARY
+#define O_BINARY _O_BINARY
+#endif
+#else
+#ifndef O_BINARY
+#define O_BINARY 0
+#endif
+#endif
+
+#if defined(__GNUC__) || defined(__clang__)
 #include <alloca.h>
-#define O_BINARY		0
 #endif
 
 #include "doomtype.h"
@@ -47,7 +59,6 @@ rcsid[] = "$Id: w_wad.c,v 1.5 1997/02/03 16:47:57 b1 Exp $";
 #pragma implementation "w_wad.h"
 #endif
 #include "w_wad.h"
-
 
 
 
