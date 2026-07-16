@@ -32,14 +32,26 @@ static const char rcsid[] = "$Id: d_main.c,v 1.8 1997/02/03 22:45:09 b1 Exp $";
 
 
 #ifdef NORMALUNIX
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
 #endif
 
+#ifdef _WIN32
+#include <io.h>
+
+#define read   _read
+#define write  _write
+#define close  _close
+#define lseek  _lseek
+#define access _access
+#define getcwd _getcwd
+
+#else
+#include <unistd.h>
+#endif
+
+#include <stdio.h>
 #include <stdlib.h>
 
 #include "doomdef.h"
@@ -573,11 +585,9 @@ void IdentifyVersion (void)
     char*	plutoniawad;
     char*	tntwad;
 
-#ifdef NORMALUNIX
+// #ifdef NORMALUNIX
     char *home;
     char *doomwaddir;
-    doomwaddir = getenv("DOOMWADDIR");
-    if (!doomwaddir)
 	doomwaddir = ".";
 
     // Commercial.
@@ -608,12 +618,12 @@ void IdentifyVersion (void)
     // French stuff.
     doom2fwad = malloc(strlen(doomwaddir)+1+10+1);
     sprintf(doom2fwad, "%s/doom2f.wad", doomwaddir);
-
+// TODO: Fix for Windows
     home = getenv("HOME");
     if (!home)
       I_Error("Please set $HOME to your home directory");
     sprintf(basedefault, "%s/.doomrc", home);
-#endif
+// #endif
 
     if (M_CheckParm ("-shdev"))
     {
