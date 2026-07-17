@@ -1,13 +1,15 @@
 # doomi
 ![Language](https://img.shields.io/badge/language-C-blue)
 ![License](https://img.shields.io/badge/license-GPL--2.0-green)
-![SDL](https://img.shields.io/badge/SDL-3-blue)
 
-DoomImproved - Doom that ditches the old video and audio code for SDL3
+DoomImproved - Doom that ditches the old video and audio code for Raylib
 
 ## Platforms
 - GNU/Linux
 - Windows
+
+## Building
+All dependencies will be either found on the system or installed via FetchContent. Just run the CMake and then compile with your build system of choice.
 
 ## Copyright
 Copyright (C) 1993-1996 id Software, Inc.
