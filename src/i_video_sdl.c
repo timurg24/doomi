@@ -74,10 +74,16 @@ static int xlatekey(SDL_Keycode key)
 
     switch (key)
     {
-        case SDLK_LEFT:       return KEY_LEFTARROW;
-        case SDLK_RIGHT:      return KEY_RIGHTARROW;
-        case SDLK_DOWN:       return KEY_DOWNARROW;
-        case SDLK_UP:         return KEY_UPARROW;
+        case SDLK_LEFT:       				return KEY_LEFTARROW;
+        case SDLK_RIGHT:      				return KEY_RIGHTARROW;
+        case SDLK_S: case SDLK_DOWN:       	return KEY_DOWNARROW;
+        case SDLK_W: case SDLK_UP:         	return KEY_UPARROW;
+
+		case SDLK_A:
+			return ',';
+
+		case SDLK_D:
+			return '.';
 
         case SDLK_ESCAPE:     return KEY_ESCAPE;
         case SDLK_RETURN:
