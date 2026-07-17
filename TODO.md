@@ -1,5 +1,6 @@
 # DoomI:
 - Add back audio
+- Add back networking
 
 # Original DOOM:
 - remove m_fixed, switch to floating point
