@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.31)
-project(doomi-project)
+
+project(doomi-project LANGUAGES C)
 
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_STANDARD_REQUIRED ON)
@@ -11,8 +12,11 @@ set(DOOM_SOURCES
     src/doomstat.c
     src/dstrings.c
     src/i_system.c
-    src/i_sound_sdl.c
-    src/i_video_sdl.c
+
+    # Replace these with your raylib implementations:
+    src/i_sound_raylib.c
+    src/i_video_raylib.c
+
     src/i_net.c
     src/tables.c
     src/f_finale.c
@@ -70,32 +74,29 @@ set(DOOM_SOURCES
     src/sounds.c
 )
 
-set(SDL_SHARED OFF CACHE BOOL "" FORCE)
-set(SDL_STATIC ON CACHE BOOL "" FORCE)
+set(RAYLIB_VERSION 6.0)
 
-set(SDL_TEST_LIBRARY OFF CACHE BOOL "" FORCE)
-set(SDL_TESTS OFF CACHE BOOL "" FORCE)
-set(SDL_EXAMPLES OFF CACHE BOOL "" FORCE)
+find_package(raylib ${RAYLIB_VERSION} CONFIG QUIET)
 
-find_package(SDL3 CONFIG QUIET)
-
-if(NOT SDL3_FOUND)
+if(NOT raylib_FOUND)
     include(FetchContent)
-    message(STATUS "SDL3 not installed; using FetchContent")
 
+    message(STATUS "raylib not installed; using FetchContent")
+
+    set(BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+    set(BUILD_GAMES OFF CACHE BOOL "" FORCE)
 
     FetchContent_Declare(
-        SDL3
-        GIT_REPOSITORY https://github.com/libsdl-org/SDL.git
-        GIT_TAG release-3.4.12
+        raylib
+        GIT_REPOSITORY https://github.com/raysan5/raylib.git
+        GIT_TAG ${RAYLIB_VERSION}
         GIT_SHALLOW TRUE
         EXCLUDE_FROM_ALL
     )
 
-    FetchContent_MakeAvailable(SDL3)
-
+    FetchContent_MakeAvailable(raylib)
 else()
-    message(STATUS "Using installed SDL3")
+    message(STATUS "Using installed raylib ${RAYLIB_VERSION}")
 endif()
 
 add_executable(doom ${DOOM_SOURCES})
@@ -105,7 +106,7 @@ target_include_directories(doom PRIVATE
 )
 
 target_link_libraries(doom PRIVATE
-    SDL3::SDL3
+    raylib
 )
 
 if(UNIX)
