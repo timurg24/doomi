@@ -43,13 +43,13 @@ rcsid[] = "$Id: r_segs.c,v 1.3 1997/01/29 20:10:19 b1 Exp $";
 // OPTIMIZE: closed two sided lines as single sided
 
 // True if any of the segs textures might be visible.
-boolean		segtextured;	
+bool		segtextured;	
 
 // False if the back side is the same plane.
-boolean		markfloor;	
-boolean		markceiling;
+bool		markfloor;	
+bool		markceiling;
 
-boolean		maskedtexture;
+bool		maskedtexture;
 int		toptexture;
 int		bottomtexture;
 int		midtexture;
@@ -476,8 +476,8 @@ R_StoreWallRange
 	ds_p->silhouette = SIL_BOTH;
 	ds_p->sprtopclip = screenheightarray;
 	ds_p->sprbottomclip = negonearray;
-	ds_p->bsilheight = MAXINT;
-	ds_p->tsilheight = MININT;
+	ds_p->bsilheight = INT_MAX;
+	ds_p->tsilheight = INT_MIN;
     }
     else
     {
@@ -493,7 +493,7 @@ R_StoreWallRange
 	else if (backsector->floorheight > viewz)
 	{
 	    ds_p->silhouette = SIL_BOTTOM;
-	    ds_p->bsilheight = MAXINT;
+	    ds_p->bsilheight = INT_MAX;
 	    // ds_p->sprbottomclip = negonearray;
 	}
 	
@@ -505,21 +505,21 @@ R_StoreWallRange
 	else if (backsector->ceilingheight < viewz)
 	{
 	    ds_p->silhouette |= SIL_TOP;
-	    ds_p->tsilheight = MININT;
+	    ds_p->tsilheight = INT_MIN;
 	    // ds_p->sprtopclip = screenheightarray;
 	}
 		
 	if (backsector->ceilingheight <= frontsector->floorheight)
 	{
 	    ds_p->sprbottomclip = negonearray;
-	    ds_p->bsilheight = MAXINT;
+	    ds_p->bsilheight = INT_MAX;
 	    ds_p->silhouette |= SIL_BOTTOM;
 	}
 	
 	if (backsector->floorheight >= frontsector->ceilingheight)
 	{
 	    ds_p->sprtopclip = screenheightarray;
-	    ds_p->tsilheight = MININT;
+	    ds_p->tsilheight = INT_MIN;
 	    ds_p->silhouette |= SIL_TOP;
 	}
 	
@@ -734,12 +734,12 @@ R_StoreWallRange
     if (maskedtexture && !(ds_p->silhouette&SIL_TOP))
     {
 	ds_p->silhouette |= SIL_TOP;
-	ds_p->tsilheight = MININT;
+	ds_p->tsilheight = INT_MIN;
     }
     if (maskedtexture && !(ds_p->silhouette&SIL_BOTTOM))
     {
 	ds_p->silhouette |= SIL_BOTTOM;
-	ds_p->bsilheight = MAXINT;
+	ds_p->bsilheight = INT_MAX;
     }
     ds_p++;
 }
