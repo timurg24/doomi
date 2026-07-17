@@ -12,7 +12,7 @@ set(DOOM_SOURCES
     src/dstrings.c
     src/i_system.c
     src/i_sound_stub.c
-    src/i_video.c
+    src/i_video_sdl.c
     src/i_net.c
     src/tables.c
     src/f_finale.c
