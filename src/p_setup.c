@@ -304,7 +304,7 @@ void P_LoadThings (int lump)
     int			i;
     mapthing_t*		mt;
     int			numthings;
-    boolean		spawn;
+    bool		spawn;
 	
     data = W_CacheLumpNum (lump,PU_STATIC);
     numthings = W_LumpLength (lump) / sizeof(mapthing_t);
@@ -610,7 +610,7 @@ P_SetupLevel
 #if 0 // UNUSED
     if (debugfile)
     {
-	Z_FreeTags (PU_LEVEL, MAXINT);
+	Z_FreeTags (PU_LEVEL, INT_MAX);
 	Z_FileDumpHeap (debugfile);
     }
     else

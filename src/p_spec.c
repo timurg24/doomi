@@ -59,7 +59,7 @@ rcsid[] = "$Id: p_spec.c,v 1.6 1997/02/03 22:45:12 b1 Exp $";
 //
 typedef struct
 {
-    boolean	istexture;
+    bool	istexture;
     int		picnum;
     int		basepic;
     int		numpics;
@@ -72,7 +72,7 @@ typedef struct
 //
 typedef struct
 {
-    boolean	istexture;	// if false, it is a flat
+    bool	istexture;	// if false, it is a flat
     char	endname[9];
     char	startname[9];
     int		speed;
@@ -128,7 +128,7 @@ animdef_t		animdefs[] =
     {true,	"WFALL4",	"WFALL1",	8},
     {true,	"DBRAIN4",	"DBRAIN1",	8},
 	
-    {-1}
+    {false, "", "", 0}
 };
 
 anim_t		anims[MAXANIMS];
@@ -152,7 +152,7 @@ void P_InitPicAnims (void)
     
     //	Init animation
     lastanim = anims;
-    for (i=0 ; animdefs[i].istexture != -1 ; i++)
+    for (i = 0; animdefs[i].startname[0] != '\0'; i++)
     {
 	if (animdefs[i].istexture)
 	{
@@ -384,7 +384,7 @@ P_FindLowestCeilingSurrounding(sector_t* sec)
     int			i;
     line_t*		check;
     sector_t*		other;
-    fixed_t		height = MAXINT;
+    fixed_t		height = INT_MAX;
 	
     for (i=0 ;i < sec->linecount ; i++)
     {
@@ -1077,7 +1077,7 @@ void P_PlayerInSpecialSector (player_t* player)
 // P_UpdateSpecials
 // Animate planes, scroll walls, etc.
 //
-boolean		levelTimer;
+bool		levelTimer;
 int		levelTimeCount;
 
 void P_UpdateSpecials (void)

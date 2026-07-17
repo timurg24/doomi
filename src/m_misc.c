@@ -70,7 +70,7 @@ int
 M_DrawText
 ( int		x,
   int		y,
-  boolean	direct,
+  bool	direct,
   char*		string )
 {
     int 	c;
@@ -109,7 +109,7 @@ M_DrawText
 #define O_BINARY 0
 #endif
 
-boolean
+bool
 M_WriteFile
 ( char const*	name,
   void*		source,
@@ -239,7 +239,7 @@ default_t	defaults[] =
     {"show_messages",&showMessages, 1},
     
 
-#ifdef NORMALUNIX
+// #ifdef NORMALUNIX
     {"key_right",&key_right, KEY_RIGHTARROW},
     {"key_left",&key_left, KEY_LEFTARROW},
     {"key_up",&key_up, KEY_UPARROW},
@@ -252,13 +252,13 @@ default_t	defaults[] =
     {"key_strafe",&key_strafe, KEY_RALT},
     {"key_speed",&key_speed, KEY_RSHIFT},
 
-// UNIX hack, to be removed. 
-#ifdef SNDSERV
-    {"sndserver", (int *) &sndserver_filename, (long long) "sndserver"},
-    {"mb_used", &mb_used, 2},
-#endif
+// // UNIX hack, to be removed. 
+// #ifdef SNDSERV
+//     {"sndserver", (int *) &sndserver_filename, (long long) "sndserver"},
+//     {"mb_used", &mb_used, 2},
+// #endif
     
-#endif
+// #endif
 
 #ifdef LINUX
     {"mousedev", (int*)&mousedev, (long long)"/dev/ttyS0"},
@@ -346,7 +346,7 @@ void M_LoadDefaults (void)
     char	strparm[100];
     char*	newstring;
     int		parm;
-    boolean	isstring;
+    bool	isstring;
     
     // set everything to base values
     numdefaults = sizeof(defaults)/sizeof(defaults[0]);

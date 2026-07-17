@@ -30,14 +30,13 @@ rcsid[] = "$Id: i_x.c,v 1.6 1997/02/03 22:45:10 b1 Exp $";
 #include <stdarg.h>
 #include <sys/time.h>
 #include <sys/types.h>
-#include <sys/socket.h>
+// #include <sys/socket.h>
 
-#include <netinet/in.h>
+// #include <netinet/in.h>
 #include <errno.h>
 #include <signal.h>
 
 #include <SDL3/SDL.h>
-#include <SDL3/SDL_main.h>
 
 #include "doomstat.h"
 #include "i_system.h"
@@ -173,8 +172,8 @@ void I_StartFrame (void)
 
 static int	lastmousex = 0;
 static int	lastmousey = 0;
-boolean		mousemoved = false;
-boolean		shmFinished;
+bool		mousemoved = false;
+bool		shmFinished;
 
 bool i_running = true;
 
@@ -402,7 +401,7 @@ void I_InitGraphics(void)
 		displayname,
 		X_width,
 		X_height,
-		SDL_WINDOW_MOUSE_CAPTURE,
+        SDL_WINDOW_RESIZABLE,
 		&I_window,
 		&I_renderer
 	)) {

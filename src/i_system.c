@@ -157,9 +157,9 @@ byte*	I_AllocLow(int length)
 //
 // I_Error
 //
-extern boolean demorecording;
+extern bool demorecording;
 
-void I_Error (char *error, ...)
+void I_Error (const char *error, ...)
 {
     va_list	argptr;
 

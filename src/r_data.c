@@ -43,10 +43,10 @@ rcsid[] = "$Id: r_data.c,v 1.4 1997/02/03 16:47:55 b1 Exp $";
 #include "doomstat.h"
 #include "r_sky.h"
 
-#if defined(_MSC_VER)
+#if __WIN32
 #include <malloc.h>
 #define alloca _alloca
-#elif defined(__GNUC__) || defined(__clang__)
+#elif NORMALUNIX
 #include <alloca.h>
 #endif
 
@@ -73,30 +73,23 @@ rcsid[] = "$Id: r_data.c,v 1.4 1997/02/03 16:47:55 b1 Exp $";
 //
 typedef struct
 {
-    short	originx;
-    short	originy;
-    short	patch;
-    short	stepdir;
-    short	colormap;
+    int16_t originx;
+    int16_t originy;
+    int16_t patch;
+    int16_t stepdir;
+    int16_t colormap;
 } mappatch_t;
 
-
-//
-// Texture definition.
-// A DOOM wall texture is a list of patches
-// which are to be combined in a predefined order.
-//
 typedef struct
 {
-    char		name[8];
-    boolean		masked;	
-    short		width;
-    short		height;
-    int         columndirectory;	// no longer obsolete
-    short		patchcount;
-    mappatch_t	patches[1];
+    char        name[8];
+    int32_t     masked;
+    int16_t     width;
+    int16_t     height;
+    int32_t     columndirectory;
+    int16_t     patchcount;
+    mappatch_t  patches[1];
 } maptexture_t;
-
 
 // A single patch from a texture definition,
 //  basically a rectangular area within

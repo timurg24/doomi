@@ -28,30 +28,24 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-typedef int32_t boolean;
+// typedef int32_t bool;
 typedef unsigned char byte;
 
+#include <limits.h>
 
-// Predefined with some OS.
-#ifdef LINUX
-#include <values.h>
-#else
-#define MAXCHAR		((char)0x7f)
-#define MAXSHORT	((short)0x7fff)
-
-// Max pos 32-bit int.
-#define MAXINT		((int)0x7fffffff)	
-#define MAXLONG		((long)0x7fffffff)
-#define MINCHAR		((char)0x80)
-#define MINSHORT	((short)0x8000)
-
-// Max negative 32-bit integer.
-#define MININT		((int)0x80000000)	
-#define MINLONG		((long)0x80000000)
+#ifndef MAXCHAR
+    #define MAXCHAR   SCHAR_MAX
+#endif
+#ifndef MINCHAR
+    #define MINCHAR   SCHAR_MIN
 #endif
 
-
-
+#ifndef MAXSHORT
+    #define MAXSHORT  SHRT_MAX
+#endif
+#ifndef MINSHORT
+    #define MINSHORT  SHRT_MIN
+#endif
 
 #endif
 //-----------------------------------------------------------------------------

@@ -281,7 +281,7 @@ typedef enum
 
 
 
-// DOOM basic types (boolean),
+// DOOM basic types (bool),
 //  and max/min values.
 //#include "doomtype.h"
 
