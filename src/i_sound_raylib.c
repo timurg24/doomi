@@ -181,7 +181,9 @@ void I_StopSound(int handle)
 
 int I_SoundIsPlaying(int handle)
 {
-    return (int)IsSoundPlaying(channels[handle].sound);
+    bool playing = IsSoundPlaying(channels[handle].sound);
+    if(!playing) I_StopSound(handle);
+    return (int)playing;
 }
 
 void I_UpdateSoundParams(int handle, int volume, int separation, int pitch)
