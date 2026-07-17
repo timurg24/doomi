@@ -364,6 +364,8 @@ void D_Display (void)
 //
 extern  boolean         demorecording;
 
+bool running = true;
+
 void D_DoomLoop (void)
 {
     if (demorecording)
@@ -379,7 +381,7 @@ void D_DoomLoop (void)
 	
     I_InitGraphics ();
 
-    while (1)
+    while (running)
     {
 	// frame syncronous IO operations
 	I_StartFrame ();                
@@ -416,6 +418,8 @@ void D_DoomLoop (void)
 	// Update sound output.
 	I_SubmitSound();
 #endif
+
+	running = shouldRun();
     }
 }
 

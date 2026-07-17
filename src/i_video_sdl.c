@@ -170,7 +170,7 @@ static int	lastmousey = 0;
 boolean		mousemoved = false;
 boolean		shmFinished;
 
-bool running = true;
+bool i_running = true;
 
 void I_GetEvent(const SDL_Event *sdl_event)
 {
@@ -244,8 +244,9 @@ void I_GetEvent(const SDL_Event *sdl_event)
             break;
 		}
 
+		case SDL_EVENT_WINDOW_CLOSE_REQUESTED:
         case SDL_EVENT_QUIT:
-            running = false;
+            i_running = false;
             break;
 
         default:
@@ -254,6 +255,7 @@ void I_GetEvent(const SDL_Event *sdl_event)
 
 }
 
+bool shouldRun() {return i_running;}
 
 //
 // I_StartTic
