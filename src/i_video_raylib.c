@@ -552,6 +552,7 @@ void I_InitGraphics(void)
 
 
     SetTraceLogLevel(LOG_NONE);
+    SetConfigFlags(FLAG_WINDOW_RESIZABLE);
 	InitWindow(SCREENWIDTH * 2, SCREENHEIGHT * 2, "DOOM");
 
     Image img = GenImageColor(SCREENWIDTH, SCREENHEIGHT, GRAY);
