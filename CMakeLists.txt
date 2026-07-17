@@ -5,8 +5,6 @@ set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS ON)
 
-find_package(X11 REQUIRED)
-
 set(DOOM_SOURCES
     src/i_main.c
     src/doomdef.c
@@ -72,21 +70,39 @@ set(DOOM_SOURCES
     src/sounds.c
 )
 
+set(SDL_TEST_LIBRARY OFF CACHE BOOL "" FORCE)
+set(SDL_TESTS OFF CACHE BOOL "" FORCE)
+set(SDL_EXAMPLES OFF CACHE BOOL "" FORCE)
+
+find_package(SDL3 CONFIG QUIET)
+
+if(NOT SDL3_FOUND)
+    include(FetchContent)
+    message(STATUS "SDL3 not installed; using FetchContent")
+
+
+    FetchContent_Declare(
+        SDL3
+        GIT_REPOSITORY https://github.com/libsdl-org/SDL.git
+        GIT_TAG release-3.4.12
+        GIT_SHALLOW TRUE
+        EXCLUDE_FROM_ALL
+    )
+
+    FetchContent_MakeAvailable(SDL3)
+
+else()
+    message(STATUS "Using installed SDL3")
+endif()
+
 add_executable(doom ${DOOM_SOURCES})
 
 target_include_directories(doom PRIVATE
     src
 )
 
-target_include_directories(doom PRIVATE
-    src
-    ${X11_INCLUDE_DIR}
-)
-
 target_link_libraries(doom PRIVATE
-    ${X11_LIBRARIES}
-    ${X11_Xext_LIB}
-    m
+    SDL3::SDL3
 )
 
 if(UNIX)
