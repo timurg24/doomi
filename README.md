@@ -1,4 +1,7 @@
 # doomi
+![Language](https://img.shields.io/badge/language-C-blue)
+![License](https://img.shields.io/badge/license-GPL--2.0-green)
+![SDL](https://img.shields.io/badge/SDL-3-blue)
 DoomImproved - Doom that ditches the old video and audio code for SDL3
 
 ## Copyright
