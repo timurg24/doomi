@@ -589,6 +589,49 @@ void IdentifyVersion (void)
     char*	plutoniawad;
     char*	tntwad;
 
+	bool paramOverride = false;
+	int p = M_CheckParm("-iwad");
+
+	if(p) {
+		if (p + 1 >= myargc)
+        	I_Error("-iwad requires a WAD filename");
+		
+		const char *iwad = myargv[p + 1];
+		D_AddFile((char*) iwad);
+		paramOverride = true;
+
+		if (strstr(iwad, "doom2.wad") != NULL ||
+			strstr(iwad, "DOOM2.WAD") != NULL)
+		{
+			gamemode = commercial;
+		}
+		else if (strstr(iwad, "plutonia.wad") != NULL ||
+				strstr(iwad, "PLUTONIA.WAD") != NULL)
+		{
+			gamemode = commercial;
+		}
+		else if (strstr(iwad, "tnt.wad") != NULL ||
+				strstr(iwad, "TNT.WAD") != NULL)
+		{
+			gamemode = commercial;
+		}
+		else if (strstr(iwad, "doomu.wad") != NULL ||
+				strstr(iwad, "DOOMU.WAD") != NULL)
+		{
+			gamemode = retail;
+		}
+		else if (strstr(iwad, "doom1.wad") != NULL ||
+				strstr(iwad, "DOOM1.WAD") != NULL)
+		{
+			gamemode = shareware;
+		}
+		else if (strstr(iwad, "doom.wad") != NULL ||
+				strstr(iwad, "DOOM.WAD") != NULL)
+		{
+			gamemode = registered;
+		}
+	}
+
 // #ifdef NORMALUNIX
     char *home;
     char *doomwaddir;
@@ -670,58 +713,59 @@ void IdentifyVersion (void)
 	return;
     }
 
-    if ( !access (doom2fwad,R_OK) )
-    {
-	gamemode = commercial;
-	// C'est ridicule!
-	// Let's handle languages in config files, okay?
-	language = french;
-	printf("French version\n");
-	D_AddFile (doom2fwad);
-	return;
-    }
+    if (!paramOverride)
+	{
+		if (!access(doom2fwad, R_OK))
+		{
+			gamemode = commercial;
+			language = french;
+			printf("French version\n");
+			D_AddFile(doom2fwad);
+			return;
+		}
 
-    if ( !access (doom2wad,R_OK) )
-    {
-	gamemode = commercial;
-	D_AddFile (doom2wad);
-	return;
-    }
+		if (!access(doom2wad, R_OK))
+		{
+			gamemode = commercial;
+			D_AddFile(doom2wad);
+			return;
+		}
 
-    if ( !access (plutoniawad, R_OK ) )
-    {
-      gamemode = commercial;
-      D_AddFile (plutoniawad);
-      return;
-    }
+		if (!access(plutoniawad, R_OK))
+		{
+			gamemode = commercial;
+			D_AddFile(plutoniawad);
+			return;
+		}
 
-    if ( !access ( tntwad, R_OK ) )
-    {
-      gamemode = commercial;
-      D_AddFile (tntwad);
-      return;
-    }
+		if (!access(tntwad, R_OK))
+		{
+			gamemode = commercial;
+			D_AddFile(tntwad);
+			return;
+		}
 
-    if ( !access (doomuwad,R_OK) )
-    {
-      gamemode = retail;
-      D_AddFile (doomuwad);
-      return;
-    }
+		if (!access(doomuwad, R_OK))
+		{
+			gamemode = retail;
+			D_AddFile(doomuwad);
+			return;
+		}
 
-    if ( !access (doomwad,R_OK) )
-    {
-      gamemode = registered;
-      D_AddFile (doomwad);
-      return;
-    }
+		if (!access(doomwad, R_OK))
+		{
+			gamemode = registered;
+			D_AddFile(doomwad);
+			return;
+		}
 
-    if ( !access (doom1wad,R_OK) )
-    {
-      gamemode = shareware;
-      D_AddFile (doom1wad);
-      return;
-    }
+		if (!access(doom1wad, R_OK))
+		{
+			gamemode = shareware;
+			D_AddFile(doom1wad);
+			return;
+		}
+	}
 
     printf("Game mode indeterminate.\n");
     gamemode = indetermined;

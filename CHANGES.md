@@ -1,6 +1,8 @@
 # User Impacting
 - Removed command line arguments:
 	- `-cdrom`
+- Adde command line arguments:
+	- `-iwad` - Loads WAD file
 - Keybinds:
 	- Added support for WASD movement
 

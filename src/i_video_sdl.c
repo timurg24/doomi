@@ -411,6 +411,11 @@ void I_InitGraphics(void)
 		I_Error("DoomI: failed to create window: %s", error);
 	}
 	
+	if (!SDL_SetRenderVSync(I_renderer, 1))
+	{
+		SDL_Log("Could not enable VSync: %s", SDL_GetError());
+	}
+
 	I_buffer = SDL_CreateTexture(
 		I_renderer,
 		SDL_PIXELFORMAT_RGBA8888,
