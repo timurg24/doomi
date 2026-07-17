@@ -3,7 +3,8 @@
 - Rewrite input system
 - Add cheats console (IDDQD does not work right now)
 - Add back networking (maybe)
-- Add True 3D 
+- Add True 3D
+  - Add more cool effects (including lights and shadows)
 
 # Original DOOM:
 - remove m_fixed, switch to floating point
