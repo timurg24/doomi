@@ -1,6 +1,8 @@
 # DoomI:
 - Add back audio (1/2 - SFX, no Music yet)
-- Add back networking
+- Rewrite input system
+- Add back networking (maybe)
+- Add True 3D
 
 # Original DOOM:
 - remove m_fixed, switch to floating point
