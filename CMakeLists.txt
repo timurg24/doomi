@@ -11,7 +11,7 @@ set(DOOM_SOURCES
     src/doomstat.c
     src/dstrings.c
     src/i_system.c
-    src/i_sound_stub.c
+    src/i_sound_sdl.c
     src/i_video_sdl.c
     src/i_net.c
     src/tables.c
