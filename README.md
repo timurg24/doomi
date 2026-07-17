@@ -5,6 +5,9 @@
 
 DoomImproved - Doom that ditches the old video and audio code for SDL3
 
+## Platforms
+-GNU Linux
+
 ## Copyright
 Copyright (C) 1993-1996 id Software, Inc.
 
