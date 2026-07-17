@@ -18,7 +18,27 @@
 #include "w_wad.h"
 #include "z_zone.h"
 
-#include <SDL3/SDL.h>
+#undef KEY_ESCAPE
+#undef KEY_ENTER
+#undef KEY_TAB
+#undef KEY_BACKSPACE
+#undef KEY_PAUSE
+#undef KEY_EQUAL
+#undef KEY_MINUS
+
+#undef KEY_F1
+#undef KEY_F2
+#undef KEY_F3
+#undef KEY_F4
+#undef KEY_F5
+#undef KEY_F6
+#undef KEY_F7
+#undef KEY_F8
+#undef KEY_F9
+#undef KEY_F10
+#undef KEY_F11
+#undef KEY_F12
+#include <raylib.h>
 
 #define NUM_CHANNELS		32
 
@@ -28,52 +48,29 @@ typedef enum {
 } SoundType;
 
 typedef struct {
-    SDL_AudioStream *stream;
+    Sound sound;
     bool active;
     float volume;
     SoundType type;
 } SoundChannel;
 
-static SDL_AudioDeviceID audio_device = 0;
 static SoundChannel channels[NUM_CHANNELS];
-
-/*
- * Add the SDL headers used by your backend here, for example:
- *
- *     #include <SDL3/SDL.h>
- *
- * Keep SDL-specific objects private to this file.
- */
-
-/* ------------------------------------------------------------------------- */
-/* SDL backend state                                                         */
-/* ------------------------------------------------------------------------- */
-
-/*
- * Define your SDL audio device, streams, loaded SFX buffers, playback
- * channels, and music state here.
- */
-
-/* ------------------------------------------------------------------------- */
-/* Sound-effect API                                                          */
-/* ------------------------------------------------------------------------- */
 
 void I_SetChannels(void)
 {
     // idk if this is the right place for this
     for(int i = 0; i < NUM_CHANNELS; i++) {
-        channels[i].stream = NULL;
+        channels[i].sound = (Sound){0};
     }
 }
 
 static int I_FindOpenChannel(void) {
     for(int i = 0; i < NUM_CHANNELS; i++) {
-        if(channels[i].stream == NULL) return i;
+        if(!channels[i].active) return i;
     }
 
     // replace channel 0
-    SDL_DestroyAudioStream(channels[0].stream);
-    channels[0].stream = NULL;
+    channels[0].sound = (Sound){0};
     return 0;
 }
 
@@ -110,11 +107,12 @@ int I_StartSound(int id, int volume, int separation, int pitch, int priority)
 {
     char lump_name[9];
 
-    int channel = I_FindOpenChannel();
-    if(audio_device == 0) return -1;
+    int channel_number = I_FindOpenChannel();
+    // how the f*ck does SoundChannel *channel = &channel work??
+    SoundChannel *channel = &channels[channel_number];
     if(id <= sfx_None || id >= NUMSFX) return -1;
 
-    SDL_snprintf(
+    snprintf(
         lump_name,
         sizeof(lump_name),
         "DS%.6s",
@@ -156,56 +154,34 @@ int I_StartSound(int id, int volume, int separation, int pitch, int priority)
         return -1;
     }
 
-    SDL_AudioSpec source_spec;
-    source_spec.format = SDL_AUDIO_U8;
-    source_spec.channels = 1;
-    source_spec.freq = sample_rate;
+    Wave wave = {
+        .frameCount = sample_count,
+        .sampleRate = sample_rate,
+        .sampleSize = 8,
+        .channels = 1,
+        .data = data
+    };
 
-    SDL_AudioStream *stream =
-                SDL_CreateAudioStream(&source_spec, NULL);
+    channel->sound = LoadSoundFromWave(wave);
+    channel->active = true;
 
-    if (stream == NULL)
-    {
-        fprintf(stderr, "Could not create audio stream: %s\n",
-                SDL_GetError());
+    PlaySound(channel->sound);
 
-        Z_ChangeTag(data, PU_CACHE);
-        return -1;
-    }
-
-    if (!SDL_BindAudioStream(audio_device, stream))
-    {
-        fprintf(stderr, "Could not bind audio stream: %s\n",
-                SDL_GetError());
-
-        SDL_DestroyAudioStream(stream);
-        Z_ChangeTag(data, PU_CACHE);
-        return -1;
-    }
-
-    channels[channel].stream = stream;
-    channels[channel].active = true;
-
-    SDL_PutAudioStreamData(
-        channels[channel].stream,
-        samples,
-        (int)sample_count
-    );
-
-    return channel;
+    return channel_number;
 }
 
 void I_StopSound(int handle)
 {
-    /* Stop the SDL playback channel identified by handle. */
-    (void)handle;
+    StopSound(channels[handle].sound);
+    UnloadSound(channels[handle].sound);
+
+    channels[handle].sound = (Sound){0};
+    channels[handle].active = false;
 }
 
 int I_SoundIsPlaying(int handle)
 {
-    /* Return nonzero while the SDL playback handle is active. */
-    (void)handle;
-    return 0;
+    return (int)IsSoundPlaying(channels[handle].sound);
 }
 
 void I_UpdateSoundParams(int handle, int volume, int separation, int pitch)
@@ -237,27 +213,14 @@ void I_SubmitSound(void)
 
 void I_InitSound(void)
 {
-    if(!SDL_InitSubSystem(SDL_INIT_AUDIO))
-        I_Error("DoomI: Audio: Failed to start SDL audio: %s", SDL_GetError());
-
-
-    audio_device = SDL_OpenAudioDevice(
-        SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK,
-        NULL
-    );
-
-    if(audio_device == 0)
-        I_Error("DoomI: Audio: Could not open audio device: %s", SDL_GetError());
-
-    if(!SDL_ResumeAudioDevice(audio_device))
-        I_Error("DoomI: Audio: Could not resume audio device: %s", SDL_GetError());
+    InitAudioDevice();
 }
 
 void I_ShutdownSound(void)
 {
-    /* Stop channels and destroy SDL streams/devices/buffers here. */
-}
+    CloseAudioDevice();
 
+}
 /* ------------------------------------------------------------------------- */
 /* Music API                                                                 */
 /* ------------------------------------------------------------------------- */

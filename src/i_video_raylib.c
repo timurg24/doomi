@@ -451,11 +451,13 @@ void I_FinishUpdate(void)
         byte g = colors[palette_index][1];
         byte b = colors[palette_index][2];
 
-        rgba_buffer[i] =
-            ((uint32_t)r << 24) |
-            ((uint32_t)g << 16) |
-            ((uint32_t)b << 8)  |
-            0xff;
+        uint8_t *pixel = (uint8_t *)&rgba_buffer[i];
+
+        pixel[0] = r;
+        pixel[1] = g;
+        pixel[2] = b;
+        pixel[3] = 255;
+
     }
 
     UpdateTexture(I_buffer, rgba_buffer);
@@ -548,7 +550,9 @@ void I_InitGraphics(void)
     else
 		displayname = "DOOM";
 
-	InitWindow(SCREENWIDTH*2,SCREENHEIGHT*2,"DOOM");
+
+    SetTraceLogLevel(LOG_NONE);
+	InitWindow(SCREENWIDTH * 2, SCREENHEIGHT * 2, "DOOM");
 
     Image img = GenImageColor(SCREENWIDTH, SCREENHEIGHT, GRAY);
     I_buffer = LoadTextureFromImage(img);
@@ -565,4 +569,6 @@ void I_InitGraphics(void)
 	{
 		I_Error("DoomI: failed to allocate RGBA framebuffer");
 	}
+
+    UnloadImage(img);
 }
