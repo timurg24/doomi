@@ -53,7 +53,7 @@ void I_ReadScreen (byte* scr);
 void I_BeginRead (void);
 void I_EndRead (void);
 
-bool shouldRun();
+boolean shouldRun();
 
 #endif
 //-----------------------------------------------------------------------------

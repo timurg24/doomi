@@ -171,7 +171,7 @@ P_NoiseAlert
 //
 // P_CheckMeleeRange
 //
-bool P_CheckMeleeRange (mobj_t*	actor)
+boolean P_CheckMeleeRange (mobj_t*	actor)
 {
     mobj_t*	pl;
     fixed_t	dist;
@@ -194,7 +194,7 @@ bool P_CheckMeleeRange (mobj_t*	actor)
 //
 // P_CheckMissileRange
 //
-bool P_CheckMissileRange (mobj_t* actor)
+boolean P_CheckMissileRange (mobj_t* actor)
 {
     fixed_t	dist;
 	
@@ -269,7 +269,7 @@ fixed_t yspeed[8] = {0,47000,FRACUNIT,47000,0,-47000,-FRACUNIT,-47000};
 extern	line_t*	spechit[MAXSPECIALCROSS];
 extern	int	numspechit;
 
-bool P_Move (mobj_t*	actor)
+boolean P_Move (mobj_t*	actor)
 {
     fixed_t	tryx;
     fixed_t	tryy;
@@ -278,8 +278,8 @@ bool P_Move (mobj_t*	actor)
     
     // warning: 'catch', 'throw', and 'try'
     // are all C++ reserved words
-    bool	try_ok;
-    bool	good;
+    boolean	try_ok;
+    boolean	good;
 		
     if (actor->movedir == DI_NODIR)
 	return false;
@@ -346,7 +346,7 @@ bool P_Move (mobj_t*	actor)
 // If a door is in the way,
 // an OpenDoor call is made to start it opening.
 //
-bool P_TryWalk (mobj_t* actor)
+boolean P_TryWalk (mobj_t* actor)
 {	
     if (!P_Move (actor))
     {
@@ -495,10 +495,10 @@ void P_NewChaseDir (mobj_t*	actor)
 // If allaround is false, only look 180 degrees in front.
 // Returns true if a player is targeted.
 //
-bool
+boolean
 P_LookForPlayers
 ( mobj_t*	actor,
-  bool	allaround )
+  boolean	allaround )
 {
     int		c;
     int		stop;
@@ -1126,10 +1126,10 @@ mobj_t*		vileobj;
 fixed_t		viletryx;
 fixed_t		viletryy;
 
-bool PIT_VileCheck (mobj_t*	thing)
+boolean PIT_VileCheck (mobj_t*	thing)
 {
     int		maxdist;
-    bool	check;
+    boolean	check;
 	
     if (!(thing->flags & MF_CORPSE) )
 	return true;	// not a monster

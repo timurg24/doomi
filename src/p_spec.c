@@ -59,7 +59,7 @@ rcsid[] = "$Id: p_spec.c,v 1.6 1997/02/03 22:45:12 b1 Exp $";
 //
 typedef struct
 {
-    bool	istexture;
+    boolean	istexture;
     int		picnum;
     int		basepic;
     int		numpics;
@@ -72,7 +72,7 @@ typedef struct
 //
 typedef struct
 {
-    bool	istexture;	// if false, it is a flat
+    boolean	istexture;	// if false, it is a flat
     char	endname[9];
     char	startname[9];
     int		speed;
@@ -1077,7 +1077,7 @@ void P_PlayerInSpecialSector (player_t* player)
 // P_UpdateSpecials
 // Animate planes, scroll walls, etc.
 //
-bool		levelTimer;
+boolean		levelTimer;
 int		levelTimeCount;
 
 void P_UpdateSpecials (void)

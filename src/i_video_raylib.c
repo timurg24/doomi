@@ -241,10 +241,10 @@ void I_StartFrame (void)
 
 static int	lastmousex = 0;
 static int	lastmousey = 0;
-bool		mousemoved = false;
-bool		shmFinished;
+boolean		mousemoved = false;
+boolean		shmFinished;
 
-bool i_running = true;
+boolean i_running = true;
 
 static void PostKeyEvent(int raylib_key, int doom_key)
 {
@@ -416,7 +416,7 @@ void I_GetEvent(void)
     }
 }
 
-bool shouldRun() {return i_running;}
+boolean shouldRun() {return i_running;}
 
 //
 // I_StartTic
@@ -524,7 +524,7 @@ void I_InitGraphics(void)
     char*		displayname;
     int			pnum;
 
-    static bool	firsttime=true;
+    static boolean	firsttime=true;
 
     if (!firsttime)
 		return;
@@ -572,4 +572,6 @@ void I_InitGraphics(void)
 	}
 
     UnloadImage(img);
+
+    SetExitKey(KEY_NULL);
 }

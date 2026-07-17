@@ -49,7 +49,7 @@ typedef enum {
 
 typedef struct {
     Sound sound;
-    bool active;
+    boolean active;
     float volume;
     SoundType type;
 } SoundChannel;
@@ -181,7 +181,7 @@ void I_StopSound(int handle)
 
 int I_SoundIsPlaying(int handle)
 {
-    bool playing = IsSoundPlaying(channels[handle].sound);
+    boolean playing = IsSoundPlaying(channels[handle].sound);
     if(!playing) I_StopSound(handle);
     return (int)playing;
 }

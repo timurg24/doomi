@@ -29,6 +29,16 @@
 #include <stdint.h>
 
 // typedef int32_t bool;
+typedef int boolean;
+
+#ifndef false
+#define false 0
+#endif
+
+#ifndef true
+#define true 1
+#endif
+
 typedef unsigned char byte;
 
 #include <limits.h>

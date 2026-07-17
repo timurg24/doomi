@@ -31,7 +31,7 @@
 
 
 
-bool
+boolean
 M_WriteFile
 ( char const*	name,
   void*		source,
@@ -53,7 +53,7 @@ int
 M_DrawText
 ( int		x,
   int		y,
-  bool	direct,
+  boolean	direct,
   char*		string );
 
 
