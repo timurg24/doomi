@@ -195,6 +195,7 @@ V_CopyRect
     } 
 } 
  
+#define RANGECHECK
 
 //
 // V_DrawPatch
@@ -216,6 +217,13 @@ V_DrawPatch
     byte*	source; 
     int		w; 
 	 
+    if (patch == NULL)
+    {
+        fprintf(stderr, "V_DrawPatch: NULL patch at x=%d y=%d scrn=%d\n",
+                x, y, scrn);
+        return;
+    }
+
     y -= SHORT(patch->topoffset); 
     x -= SHORT(patch->leftoffset); 
 #ifdef RANGECHECK 
