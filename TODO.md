@@ -2,14 +2,6 @@
 - Add back audio
 
 # Original DOOM:
-- create Web repository for sources, patches,
-  news, and pointer to doom-editing mailing
-  list.
-
-- get DOOM Public License from id
-
------------------------------------------------
-
 - remove m_fixed, switch to floating point
   More stable, and prolly even faster.
 
