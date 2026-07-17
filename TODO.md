@@ -1,8 +1,9 @@
 # DoomI:
 - Add back audio (1/2 - SFX, no Music yet)
 - Rewrite input system
+- Add cheats console (IDDQD does not work right now)
 - Add back networking (maybe)
-- Add True 3D
+- Add True 3D 
 
 # Original DOOM:
 - remove m_fixed, switch to floating point
