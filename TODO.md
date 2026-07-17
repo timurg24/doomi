@@ -27,10 +27,10 @@
   libref, libgame etc.?
   Another major rewrite.
 
-- use XFree86 DGA, prolly not that much faster
+~~- use XFree86 DGA, prolly not that much faster
   than MIT SHM, but allows for directly sampled
   mouse (and even freelook). Recommended for
-  GLDOOM.
+  GLDOOM.~~
 
 - put together an accompanying developer toolkit
   source distribution: DEU, RMB, BSP for Linux/X.
@@ -114,5 +114,5 @@
    processes in your system, blocking /dev/bsp.
   A timeout on lack of input for "sndserver"?
 
-- threaded sndserver? SHM mixing buffer?
-   Or internal, timer-based?
+~~- threaded sndserver? SHM mixing buffer?
+   Or internal, timer-based?~~
