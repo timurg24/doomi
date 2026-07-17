@@ -1,5 +1,5 @@
 # DoomI:
-- Add back audio
+- Add back audio (1/2 - SFX, no Music yet)
 - Add back networking
 
 # Original DOOM:
