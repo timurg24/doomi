@@ -36,7 +36,33 @@ rcsid[] = "$Id: i_x.c,v 1.6 1997/02/03 22:45:10 b1 Exp $";
 #include <errno.h>
 #include <signal.h>
 
-#include <SDL3/SDL.h>
+#include <raylib.h>
+// raylib aliases to not conflict with doom
+enum
+{
+    RL_KEY_ESCAPE      = KEY_ESCAPE,
+    RL_KEY_ENTER       = KEY_ENTER,
+    RL_KEY_TAB         = KEY_TAB,
+    RL_KEY_BACKSPACE   = KEY_BACKSPACE,
+    RL_KEY_DELETE      = KEY_DELETE,
+    RL_KEY_PAUSE       = KEY_PAUSE,
+    RL_KEY_EQUAL       = KEY_EQUAL,
+    RL_KEY_MINUS       = KEY_MINUS,
+
+    RL_KEY_F1          = KEY_F1,
+    RL_KEY_F2          = KEY_F2,
+    RL_KEY_F3          = KEY_F3,
+    RL_KEY_F4          = KEY_F4,
+    RL_KEY_F5          = KEY_F5,
+    RL_KEY_F6          = KEY_F6,
+    RL_KEY_F7          = KEY_F7,
+    RL_KEY_F8          = KEY_F8,
+    RL_KEY_F9          = KEY_F9,
+    RL_KEY_F10         = KEY_F10,
+    RL_KEY_F11         = KEY_F11,
+    RL_KEY_F12         = KEY_F12
+};
+
 
 #include "doomstat.h"
 #include "i_system.h"
@@ -52,10 +78,12 @@ int X_width;
 int X_height;
 
 // Modern
-SDL_Window* I_window = NULL;
-SDL_Renderer* I_renderer = NULL;
-SDL_Texture* I_buffer = NULL;
+// SDL_Window* I_window = NULL;
+// SDL_Renderer* I_renderer = NULL;
+// SDL_Texture* I_buffer = NULL;
+Texture2D I_buffer;
 static uint32_t *rgba_buffer = NULL;
+
 
 // Blocky mode,
 // replace each 320x200 pixel with multiply*multiply pixels.
@@ -67,69 +95,109 @@ static int	multiply=1;
 //
 //  Translates the key passed in `key`
 //
-static int xlatekey(SDL_Keycode key)
+static int xlatekey(int key)
 {
-    int rc = (int)key;
-
     switch (key)
     {
-        case SDLK_LEFT:       				return KEY_LEFTARROW;
-        case SDLK_RIGHT:      				return KEY_RIGHTARROW;
-        case SDLK_S: case SDLK_DOWN:       	return KEY_DOWNARROW;
-        case SDLK_W: case SDLK_UP:         	return KEY_UPARROW;
+        /* Movement */
+        case KEY_LEFT:
+            return KEY_LEFTARROW;
 
-		case SDLK_A:
-			return ',';
+        case KEY_RIGHT:
+            return KEY_RIGHTARROW;
 
-		case SDLK_D:
-			return '.';
+        case KEY_S:
+        case KEY_DOWN:
+            return KEY_DOWNARROW;
 
-        case SDLK_ESCAPE:     return KEY_ESCAPE;
-        case SDLK_RETURN:
-        case SDLK_KP_ENTER:   return KEY_ENTER;
+        case KEY_W:
+        case KEY_UP:
+            return KEY_UPARROW;
 
-        case SDLK_TAB:        return KEY_TAB;
+        case KEY_A:
+            return ',';
 
-        case SDLK_F1:         return KEY_F1;
-        case SDLK_F2:         return KEY_F2;
-        case SDLK_F3:         return KEY_F3;
-        case SDLK_F4:         return KEY_F4;
-        case SDLK_F5:         return KEY_F5;
-        case SDLK_F6:         return KEY_F6;
-        case SDLK_F7:         return KEY_F7;
-        case SDLK_F8:         return KEY_F8;
-        case SDLK_F9:         return KEY_F9;
-        case SDLK_F10:        return KEY_F10;
-        case SDLK_F11:        return KEY_F11;
-        case SDLK_F12:        return KEY_F12;
+        case KEY_D:
+            return '.';
 
-        case SDLK_BACKSPACE:
-        case SDLK_DELETE:
+        /* General controls */
+        case RL_KEY_ESCAPE:
+            return KEY_ESCAPE;
+
+        case RL_KEY_ENTER:
+        case KEY_KP_ENTER:
+            return KEY_ENTER;
+
+        case RL_KEY_TAB:
+            return KEY_TAB;
+
+        /* Function keys */
+        case RL_KEY_F1:
+            return KEY_F1;
+
+        case RL_KEY_F2:
+            return KEY_F2;
+
+        case RL_KEY_F3:
+            return KEY_F3;
+
+        case RL_KEY_F4:
+            return KEY_F4;
+
+        case RL_KEY_F5:
+            return KEY_F5;
+
+        case RL_KEY_F6:
+            return KEY_F6;
+
+        case RL_KEY_F7:
+            return KEY_F7;
+
+        case RL_KEY_F8:
+            return KEY_F8;
+
+        case RL_KEY_F9:
+            return KEY_F9;
+
+        case RL_KEY_F10:
+            return KEY_F10;
+
+        case RL_KEY_F11:
+            return KEY_F11;
+
+        case RL_KEY_F12:
+            return KEY_F12;
+
+        /* Editing */
+        case RL_KEY_BACKSPACE:
+        case RL_KEY_DELETE:
             return KEY_BACKSPACE;
 
-        case SDLK_PAUSE:
+        case RL_KEY_PAUSE:
             return KEY_PAUSE;
 
-        case SDLK_EQUALS:
-        case SDLK_KP_EQUALS:
+        /* Plus and minus */
+        case RL_KEY_EQUAL:
+        case KEY_KP_EQUAL:
             return KEY_EQUALS;
 
-        case SDLK_MINUS:
-        case SDLK_KP_MINUS:
+        case RL_KEY_MINUS:
+        case KEY_KP_SUBTRACT:
             return KEY_MINUS;
 
-        case SDLK_LSHIFT:
-        case SDLK_RSHIFT:
+        /* Modifiers */
+        case KEY_LEFT_SHIFT:
+        case KEY_RIGHT_SHIFT:
             return KEY_RSHIFT;
 
-        case SDLK_LCTRL:
-        case SDLK_RCTRL:
+        case KEY_LEFT_CONTROL:
+        case KEY_RIGHT_CONTROL:
             return KEY_RCTRL;
 
-        case SDLK_LALT:
-        case SDLK_RALT:
-        case SDLK_LGUI:
-        case SDLK_RGUI:
+        case KEY_LEFT_ALT:
+        case KEY_RIGHT_ALT:
+        case KEY_LEFT_SUPER:
+        case KEY_RIGHT_SUPER:
             return KEY_RALT;
 
         default:
@@ -137,14 +205,17 @@ static int xlatekey(SDL_Keycode key)
     }
 
     /*
-     * Printable SDL keycodes generally use their Unicode/ASCII value.
-     * DOOM expects lowercase letters.
+     * raylib letter key values use uppercase ASCII.
+     * Doom expects lowercase ASCII.
      */
-    if (rc >= 'A' && rc <= 'Z')
-        rc = rc - 'A' + 'a';
+    if (key >= KEY_A && key <= KEY_Z)
+        return 'a' + (key - KEY_A);
 
-    if (rc >= ' ' && rc <= '~')
-        return rc;
+    /*
+     * raylib number keys and common punctuation use ASCII values.
+     */
+    if (key >= ' ' && key <= '~')
+        return key;
 
     return 0;
 }
@@ -153,10 +224,8 @@ void I_ShutdownGraphics(void)
 {
 	free(rgba_buffer);
     rgba_buffer = NULL;
-  	SDL_DestroyTexture(I_buffer);
-    SDL_DestroyRenderer(I_renderer);
-    SDL_DestroyWindow(I_window);
-    SDL_Quit();
+  	UnloadTexture(I_buffer);
+    CloseWindow();
 }
 
 
@@ -177,87 +246,174 @@ bool		shmFinished;
 
 bool i_running = true;
 
-void I_GetEvent(const SDL_Event *sdl_event)
+static void PostKeyEvent(int raylib_key, int doom_key)
 {
-
     event_t event;
 
-	switch(sdl_event->type) {
-		case SDL_EVENT_KEY_DOWN:
-			if(sdl_event->key.repeat) break;
+    if (IsKeyPressed(raylib_key))
+    {
+        event.type = ev_keydown;
+        event.data1 = doom_key;
+        event.data2 = 0;
+        event.data3 = 0;
 
-			event.type = ev_keydown;
-			event.data1 = xlatekey(sdl_event->key.key);
-			event.data2 = 0;
-			event.data3 = 0;
+        D_PostEvent(&event);
+    }
 
-			if(event.data1 != 0) D_PostEvent(&event);
-			break;
-		
-		case SDL_EVENT_KEY_UP:
-			event.type = ev_keyup;
-			event.data1 = xlatekey(sdl_event->key.key);
-			event.data2 = 0;
-			event.data3 = 0;
-		
-			if(event.data1 != 0) D_PostEvent(&event);
-			break;
+    if (IsKeyReleased(raylib_key))
+    {
+        event.type = ev_keyup;
+        event.data1 = doom_key;
+        event.data2 = 0;
+        event.data3 = 0;
 
-		case SDL_EVENT_MOUSE_BUTTON_DOWN:
-		case SDL_EVENT_MOUSE_BUTTON_UP: {
-			event.type = ev_mouse;
-			event.data1 = 0;
-			event.data2 = 0;
-			event.data3 = 0;
+        D_PostEvent(&event);
+    }
+}
 
-			// bit 0 = left
-			// bit 1 = right
-			// bit 2 = middle
-			// (since when did they have middle mouse s_buttons in 1993?)
+static int GetDoomMouseButtons(void)
+{
+    int buttons = 0;
 
-			SDL_MouseButtonFlags s_buttons = SDL_GetMouseState(NULL, NULL);
+    // Doom:
+    // bit 0 = left
+    // bit 1 = right
+    // bit 2 = middle
 
-			if(s_buttons & SDL_BUTTON_LMASK) event.data1 |= 1;
-			if(s_buttons & SDL_BUTTON_RMASK) event.data1 |= 2;
-			if(s_buttons & SDL_BUTTON_MMASK) event.data1 |= 4;
-			D_PostEvent(&event);
-			break;
-		}
+    if (IsMouseButtonDown(MOUSE_BUTTON_LEFT))
+        buttons |= 1;
 
-		case SDL_EVENT_MOUSE_MOTION: {
-			event.type = ev_mouse;
-			event.data1 = 0;
-			event.data2 = 0;
-			event.data3 = 0; // did default values not exist in the dinosaur age?
+    if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT))
+        buttons |= 2;
 
-			SDL_MouseButtonFlags s_buttons = SDL_GetMouseState(NULL, NULL);
+    if (IsMouseButtonDown(MOUSE_BUTTON_MIDDLE))
+        buttons |= 4;
 
-            if (s_buttons & SDL_BUTTON_LMASK)
-                event.data1 |= 1;
+    return buttons;
+}
 
-            if (s_buttons & SDL_BUTTON_RMASK)
-                event.data1 |= 2;
+void I_GetEvent(void)
+{
+    event_t event;
+    Vector2 mouse_delta;
 
-            if (s_buttons & SDL_BUTTON_MMASK)
-                event.data1 |= 4;
+    /*
+     * Keyboard events
+     *
+     * Using IsKeyPressed()/IsKeyReleased() avoids raylib's automatic
+     * key-repeat becoming repeated Doom key-down events.
+     */
+    PostKeyEvent(KEY_LEFT,        KEY_LEFTARROW);
+    PostKeyEvent(KEY_RIGHT,       KEY_RIGHTARROW);
+    PostKeyEvent(KEY_DOWN,        KEY_DOWNARROW);
+    PostKeyEvent(KEY_UP,          KEY_UPARROW);
 
-            event.data2 = (int)sdl_event->motion.xrel << 2;
-            event.data3 = -((int)sdl_event->motion.yrel << 2);
+    PostKeyEvent(KEY_W,           KEY_UPARROW);
+    PostKeyEvent(KEY_S,           KEY_DOWNARROW);
+    PostKeyEvent(KEY_A,           ',');
+    PostKeyEvent(KEY_D,           '.');
 
-            if (event.data2 != 0 || event.data3 != 0)
-                D_PostEvent(&event);
-            break;
-		}
+    PostKeyEvent(RL_KEY_ESCAPE,   KEY_ESCAPE);
+    PostKeyEvent(RL_KEY_ENTER,    KEY_ENTER);
+    PostKeyEvent(KEY_KP_ENTER,    KEY_ENTER);
+    PostKeyEvent(RL_KEY_TAB,      KEY_TAB);
 
-		case SDL_EVENT_WINDOW_CLOSE_REQUESTED:
-        case SDL_EVENT_QUIT:
-            i_running = false;
-            break;
+    PostKeyEvent(RL_KEY_F1,       KEY_F1);
+    PostKeyEvent(RL_KEY_F2,       KEY_F2);
+    PostKeyEvent(RL_KEY_F3,       KEY_F3);
+    PostKeyEvent(RL_KEY_F4,       KEY_F4);
+    PostKeyEvent(RL_KEY_F5,       KEY_F5);
+    PostKeyEvent(RL_KEY_F6,       KEY_F6);
+    PostKeyEvent(RL_KEY_F7,       KEY_F7);
+    PostKeyEvent(RL_KEY_F8,       KEY_F8);
+    PostKeyEvent(RL_KEY_F9,       KEY_F9);
+    PostKeyEvent(RL_KEY_F10,      KEY_F10);
+    PostKeyEvent(RL_KEY_F11,      KEY_F11);
+    PostKeyEvent(RL_KEY_F12,      KEY_F12);
 
-        default:
-            break;
-	}
+    PostKeyEvent(RL_KEY_BACKSPACE, KEY_BACKSPACE);
+    PostKeyEvent(RL_KEY_DELETE,    KEY_BACKSPACE);
+    PostKeyEvent(RL_KEY_PAUSE,     KEY_PAUSE);
 
+    PostKeyEvent(RL_KEY_EQUAL,     KEY_EQUALS);
+    PostKeyEvent(KEY_KP_EQUAL,     KEY_EQUALS);
+    PostKeyEvent(RL_KEY_MINUS,     KEY_MINUS);
+    PostKeyEvent(KEY_KP_SUBTRACT,  KEY_MINUS);
+
+    PostKeyEvent(KEY_LEFT_SHIFT,    KEY_RSHIFT);
+    PostKeyEvent(KEY_RIGHT_SHIFT,   KEY_RSHIFT);
+    PostKeyEvent(KEY_LEFT_CONTROL,  KEY_RCTRL);
+    PostKeyEvent(KEY_RIGHT_CONTROL, KEY_RCTRL);
+    PostKeyEvent(KEY_LEFT_ALT,      KEY_RALT);
+    PostKeyEvent(KEY_RIGHT_ALT,     KEY_RALT);
+    PostKeyEvent(KEY_LEFT_SUPER,    KEY_RALT);
+    PostKeyEvent(KEY_RIGHT_SUPER,   KEY_RALT);
+
+    /*
+     * Printable keys used by Doom menus, cheats, and save-game names.
+     */
+    for (int ray_key = KEY_ZERO; ray_key <= KEY_NINE; ray_key++)
+    {
+        PostKeyEvent(ray_key, '0' + (ray_key - KEY_ZERO));
+    }
+
+    for (int ray_key = KEY_A; ray_key <= KEY_Z; ray_key++)
+    {
+        int doom_key = 'a' + (ray_key - KEY_A);
+
+        /*
+         * W, A, S, and D are remapped above, so do not post them twice.
+         */
+        if (ray_key == KEY_W ||
+            ray_key == KEY_A ||
+            ray_key == KEY_S ||
+            ray_key == KEY_D)
+        {
+            continue;
+        }
+
+        PostKeyEvent(ray_key, doom_key);
+    }
+
+    PostKeyEvent(KEY_SPACE,         ' ');
+    PostKeyEvent(KEY_APOSTROPHE,    '\'');
+    PostKeyEvent(KEY_COMMA,         ',');
+    PostKeyEvent(KEY_PERIOD,        '.');
+    PostKeyEvent(KEY_SLASH,         '/');
+    PostKeyEvent(KEY_SEMICOLON,     ';');
+    PostKeyEvent(KEY_LEFT_BRACKET,  '[');
+    PostKeyEvent(KEY_RIGHT_BRACKET, ']');
+    PostKeyEvent(KEY_BACKSLASH,     '\\');
+    PostKeyEvent(KEY_GRAVE,         '`');
+
+    /*
+     * Mouse buttons and relative movement.
+     *
+     * GetMouseDelta() is the raylib equivalent of SDL's xrel/yrel.
+     */
+    mouse_delta = GetMouseDelta();
+
+    if (mouse_delta.x != 0.0f ||
+        mouse_delta.y != 0.0f ||
+        IsMouseButtonPressed(MOUSE_BUTTON_LEFT) ||
+        IsMouseButtonReleased(MOUSE_BUTTON_LEFT) ||
+        IsMouseButtonPressed(MOUSE_BUTTON_RIGHT) ||
+        IsMouseButtonReleased(MOUSE_BUTTON_RIGHT) ||
+        IsMouseButtonPressed(MOUSE_BUTTON_MIDDLE) ||
+        IsMouseButtonReleased(MOUSE_BUTTON_MIDDLE))
+    {
+        event.type = ev_mouse;
+        event.data1 = GetDoomMouseButtons();
+        event.data2 = (int)mouse_delta.x << 2;
+        event.data3 = -((int)mouse_delta.y << 2);
+
+        D_PostEvent(&event);
+    }
+
+    if (WindowShouldClose())
+    {
+        i_running = false;
+    }
 }
 
 bool shouldRun() {return i_running;}
@@ -267,11 +423,7 @@ bool shouldRun() {return i_running;}
 //
 void I_StartTic (void)
 {
-	SDL_Event event;
-
-	while(SDL_PollEvent(&event)) {
-		I_GetEvent(&event);
-	}
+    I_GetEvent();
 }
 
 
@@ -306,28 +458,30 @@ void I_FinishUpdate(void)
             0xff;
     }
 
-    if (!SDL_UpdateTexture(
-            I_buffer,
-            NULL,
-            rgba_buffer,
-            SCREENWIDTH * sizeof(*rgba_buffer)))
-    {
-        I_Error(
-            "DoomI: SDL_UpdateTexture failed: %s",
-            SDL_GetError()
-        );
-    }
+    UpdateTexture(I_buffer, rgba_buffer);
 
-    SDL_RenderClear(I_renderer);
+    BeginDrawing();
 
-    SDL_RenderTexture(
-        I_renderer,
+    DrawTexturePro(
         I_buffer,
-        NULL,
-        NULL
+        (Rectangle){
+            0.0f,
+            0.0f,
+            (float)I_buffer.width,
+            (float)I_buffer.height
+        },
+        (Rectangle){
+            0.0f,
+            0.0f,
+            (float)GetScreenWidth(),
+            (float)GetScreenHeight()
+        },
+        (Vector2){ 0.0f, 0.0f },
+        0.0f,
+        WHITE
     );
 
-    SDL_RenderPresent(I_renderer);
+    EndDrawing();
 }
 
 //
@@ -394,49 +548,17 @@ void I_InitGraphics(void)
     else
 		displayname = "DOOM";
 
-	if(!SDL_Init(SDL_INIT_VIDEO))
-		I_Error("DoomI: SDL initialization failrue: %s", SDL_GetError());
+	InitWindow(SCREENWIDTH*2,SCREENHEIGHT*2,"DOOM");
 
-	if(!SDL_CreateWindowAndRenderer(
-		displayname,
-		X_width,
-		X_height,
-        SDL_WINDOW_RESIZABLE,
-		&I_window,
-		&I_renderer
-	)) {
-		const char* error = SDL_GetError();
-		SDL_Quit();
-		I_Error("DoomI: failed to create window: %s", error);
-	}
-	
-	if (!SDL_SetRenderVSync(I_renderer, 1))
-	{
-		SDL_Log("Could not enable VSync: %s", SDL_GetError());
-	}
+    Image img = GenImageColor(SCREENWIDTH, SCREENHEIGHT, GRAY);
+    I_buffer = LoadTextureFromImage(img);
 
-	I_buffer = SDL_CreateTexture(
-		I_renderer,
-		SDL_PIXELFORMAT_RGBA8888,
-		SDL_TEXTUREACCESS_STREAMING,
-		SCREENWIDTH,
-		SCREENHEIGHT
-	);
-
-	if(!I_buffer) {
-		const char* error = SDL_GetError();
-		SDL_DestroyRenderer(I_renderer);
-		SDL_DestroyWindow(I_window);
-		SDL_Quit();
-		I_Error("DoomI: failed to create screen buffer texture: %s", error);
-	}
-
-	SDL_SetTextureScaleMode(I_buffer, SDL_SCALEMODE_NEAREST);
+	SetTextureFilter(I_buffer, TEXTURE_FILTER_POINT);
 
 	rgba_buffer = malloc(
-    (size_t)SCREENWIDTH *
-    (size_t)SCREENHEIGHT *
-    sizeof(*rgba_buffer)
+        (size_t)SCREENWIDTH *
+        (size_t)SCREENHEIGHT *
+        sizeof(*rgba_buffer)
 	);
 
 	if (!rgba_buffer)
