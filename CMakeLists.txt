@@ -25,6 +25,9 @@ set(DOOM_SOURCES
     src/i_sound_music.c
     src/i_video_raylib.c
 
+    # custom sources
+    src/w_wad_pk3.c
+
     src/i_net.c
     src/tables.c
     src/f_finale.c
@@ -146,6 +149,18 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(libADLMIDI)
 
 # ---------------------------------------------------------------------------
+# miniz
+# ---------------------------------------------------------------------------
+
+FetchContent_Declare(
+    miniz
+    GIT_REPOSITORY https://github.com/richgel999/miniz.git
+    GIT_TAG 3.1.2
+)
+
+FetchContent_MakeAvailable(miniz)
+
+# ---------------------------------------------------------------------------
 # Doom executable
 # ---------------------------------------------------------------------------
 
@@ -158,6 +173,7 @@ target_include_directories(doom PRIVATE
 target_link_libraries(doom PRIVATE
     raylib
     ADLMIDI_static
+    miniz
 )
 
 # The executable contains C source but links a C++ static library.
