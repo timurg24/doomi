@@ -571,6 +571,39 @@ void D_AddFile (char *file)
     wadfiles[numwadfiles] = newfile;
 }
 
+void SetGameVersion(const char* iwad) {
+	if (strstr(iwad, "doom2.wad") != NULL ||
+		strstr(iwad, "DOOM2.WAD") != NULL)
+	{
+		gamemode = commercial;
+	}
+	else if (strstr(iwad, "plutonia.wad") != NULL ||
+			strstr(iwad, "PLUTONIA.WAD") != NULL)
+	{
+		gamemode = commercial;
+	}
+	else if (strstr(iwad, "tnt.wad") != NULL ||
+			strstr(iwad, "TNT.WAD") != NULL)
+	{
+		gamemode = commercial;
+	}
+	else if (strstr(iwad, "doomu.wad") != NULL ||
+			strstr(iwad, "DOOMU.WAD") != NULL)
+	{
+		gamemode = retail;
+	}
+	else if (strstr(iwad, "doom1.wad") != NULL ||
+			strstr(iwad, "DOOM1.WAD") != NULL)
+	{
+		gamemode = shareware;
+	}
+	else if (strstr(iwad, "doom.wad") != NULL ||
+			strstr(iwad, "DOOM.WAD") != NULL)
+	{
+		gamemode = registered;
+	}
+}
+
 //
 // IdentifyVersion
 // Checks availability of IWAD files by name,
@@ -592,6 +625,15 @@ void IdentifyVersion (void)
 	boolean paramOverride = false;
 	int p = M_CheckParm("-iwad");
 
+	const char *ext = strrchr(myargv[1], '.');
+
+	// windows drag and drop support
+	if (ext != NULL && strcasecmp(ext, ".wad") == 0)
+	{
+		D_AddFile((char*)ext);
+		SetGameVersion(ext);
+	}
+
 	if(p) {
 		if (p + 1 >= myargc)
         	I_Error("-iwad requires a WAD filename");
@@ -600,36 +642,7 @@ void IdentifyVersion (void)
 		D_AddFile((char*) iwad);
 		paramOverride = true;
 
-		if (strstr(iwad, "doom2.wad") != NULL ||
-			strstr(iwad, "DOOM2.WAD") != NULL)
-		{
-			gamemode = commercial;
-		}
-		else if (strstr(iwad, "plutonia.wad") != NULL ||
-				strstr(iwad, "PLUTONIA.WAD") != NULL)
-		{
-			gamemode = commercial;
-		}
-		else if (strstr(iwad, "tnt.wad") != NULL ||
-				strstr(iwad, "TNT.WAD") != NULL)
-		{
-			gamemode = commercial;
-		}
-		else if (strstr(iwad, "doomu.wad") != NULL ||
-				strstr(iwad, "DOOMU.WAD") != NULL)
-		{
-			gamemode = retail;
-		}
-		else if (strstr(iwad, "doom1.wad") != NULL ||
-				strstr(iwad, "DOOM1.WAD") != NULL)
-		{
-			gamemode = shareware;
-		}
-		else if (strstr(iwad, "doom.wad") != NULL ||
-				strstr(iwad, "DOOM.WAD") != NULL)
-		{
-			gamemode = registered;
-		}
+		SetGameVersion(iwad);
 	}
 
 // #ifdef NORMALUNIX
