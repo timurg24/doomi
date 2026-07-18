@@ -50,7 +50,7 @@ void I_InitMusic(void) {
     if(music_player != NULL) return;
     music_player = adl_init(44100);
     if(!music_player) I_Error("Error while initialization (libADLMIDI): %s", adl_errorString());
-    adl_setVolumeRangeModel(music_player, ADLMIDI_VolumeModel_DMX);
+    adl_switchEmulator(music_player, ADLMIDI_EMU_NUKED);
 
     SetAudioStreamBufferSizeDefault(MUSIC_FRAMES);
 
