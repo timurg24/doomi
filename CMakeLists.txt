@@ -21,7 +21,8 @@ set(DOOM_SOURCES
     src/i_system.c
 
     # raylib implementations
-    src/i_sound_raylib.c
+    src/i_sound_sfx.c
+    src/i_sound_music.c
     src/i_video_raylib.c
 
     src/i_net.c
