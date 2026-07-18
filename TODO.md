@@ -1,5 +1,5 @@
 # DoomI:
-- Add back audio (1/2 - SFX, no Music yet)
++ Add back audio
 - Rewrite input system
 - Add cheats console (IDDQD does not work right now)
 - Add back networking (maybe)
