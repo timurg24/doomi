@@ -6,7 +6,6 @@
 - Keybinds:
 	- Added support for WASD movement
 - Removed features:
-	- Music (will be added shortly)
 	- Multiplayer
 
 # Technical

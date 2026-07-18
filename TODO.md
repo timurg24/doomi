@@ -1,9 +1,9 @@
 # DoomI:
-+ Add back audio
-- Rewrite input system
-- Add cheats console (IDDQD does not work right now)
-- Add back networking (maybe)
-- Add True 3D
+- [x] Add back audio
+- [ ] Rewrite input system
+- [ ] Add cheats console (IDDQD does not work right now)
+- [ ] Add back networking (maybe)
+- [ ] Add True 3D
   - Add more cool effects (including lights and shadows)
 - `.ipk3` support
 
