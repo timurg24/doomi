@@ -5,7 +5,7 @@
 - [ ] Add back networking (maybe)
 - [ ] Add True 3D
   - Add more cool effects (including lights and shadows)
-- `.ipk3` support
+- [ ] `.ipk3` support
 
 # Original DOOM:
 - remove m_fixed, switch to floating point
