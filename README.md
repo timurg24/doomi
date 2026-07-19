@@ -2,7 +2,9 @@
 ![Language](https://img.shields.io/badge/language-C-blue)
 ![License](https://img.shields.io/badge/license-GPL--2.0-green)
 
-DoomImproved - Doom that ditches the old video and audio code for Raylib
+DoomImproved - Doom that ditches the old video and audio code for Raylib.
+
+The goal is to provide a capable modding platform while retaining as much compatability with `linuxdoom` as possible.
 
 ## Platforms
 - GNU/Linux
