@@ -1,10 +1,17 @@
 cmake_minimum_required(VERSION 3.31)
 
-project(doomi-project LANGUAGES C)
+project(doomi-project LANGUAGES C CXX)
 
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 set(CMAKE_C_EXTENSIONS ON)
+
+# libADLMIDI contains C++ source code.
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+include(FetchContent)
 
 set(DOOM_SOURCES
     src/i_main.c
@@ -13,9 +20,13 @@ set(DOOM_SOURCES
     src/dstrings.c
     src/i_system.c
 
-    # Replace these with your raylib implementations:
-    src/i_sound_raylib.c
+    # raylib implementations
+    src/i_sound_sfx.c
+    src/i_sound_music.c
     src/i_video_raylib.c
+
+    # custom sources
+    src/w_wad_pk3.c
 
     src/i_net.c
     src/tables.c
@@ -74,13 +85,15 @@ set(DOOM_SOURCES
     src/sounds.c
 )
 
+# ---------------------------------------------------------------------------
+# raylib
+# ---------------------------------------------------------------------------
+
 set(RAYLIB_VERSION 6.0)
 
 find_package(raylib ${RAYLIB_VERSION} CONFIG QUIET)
 
 if(NOT raylib_FOUND)
-    include(FetchContent)
-
     message(STATUS "raylib not installed; using FetchContent")
 
     set(BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
@@ -99,6 +112,58 @@ else()
     message(STATUS "Using installed raylib ${RAYLIB_VERSION}")
 endif()
 
+# ---------------------------------------------------------------------------
+# libADLMIDI
+# ---------------------------------------------------------------------------
+
+# Build only the static library needed by the game.
+set(libADLMIDI_STATIC ON CACHE BOOL "" FORCE)
+set(libADLMIDI_SHARED OFF CACHE BOOL "" FORCE)
+
+# Required for loading and sequencing MIDI/MUS songs.
+set(WITH_MIDI_SEQUENCER ON CACHE BOOL "" FORCE)
+set(WITH_MUS_SUPPORT ON CACHE BOOL "" FORCE)
+
+# Keep libADLMIDI's built-in instrument banks.
+set(WITH_EMBEDDED_BANKS ON CACHE BOOL "" FORCE)
+
+# Disable utilities, examples, tests and optional integrations.
+set(WITH_UNIT_TESTS OFF CACHE BOOL "" FORCE)
+set(WITH_MIDIPLAY OFF CACHE BOOL "" FORCE)
+set(WITH_ADLMIDI2 OFF CACHE BOOL "" FORCE)
+set(WITH_VLC_PLUGIN OFF CACHE BOOL "" FORCE)
+set(WITH_WINMMDRV OFF CACHE BOOL "" FORCE)
+set(WITH_OLD_UTILS OFF CACHE BOOL "" FORCE)
+set(WITH_GENADLDATA OFF CACHE BOOL "" FORCE)
+set(EXAMPLE_SDL2_AUDIO OFF CACHE BOOL "" FORCE)
+set(WITH_HQ_RESAMPLER OFF CACHE BOOL "" FORCE)
+
+FetchContent_Declare(
+    libADLMIDI
+    GIT_REPOSITORY https://github.com/Wohlstand/libADLMIDI.git
+    GIT_TAG v1.6.1
+    GIT_SHALLOW TRUE
+    EXCLUDE_FROM_ALL
+)
+
+FetchContent_MakeAvailable(libADLMIDI)
+
+# ---------------------------------------------------------------------------
+# miniz
+# ---------------------------------------------------------------------------
+
+FetchContent_Declare(
+    miniz
+    GIT_REPOSITORY https://github.com/richgel999/miniz.git
+    GIT_TAG 3.1.2
+)
+
+FetchContent_MakeAvailable(miniz)
+
+# ---------------------------------------------------------------------------
+# Doom executable
+# ---------------------------------------------------------------------------
+
 add_executable(doom ${DOOM_SOURCES})
 
 target_include_directories(doom PRIVATE
@@ -107,6 +172,14 @@ target_include_directories(doom PRIVATE
 
 target_link_libraries(doom PRIVATE
     raylib
+    ADLMIDI_static
+    miniz
+)
+
+# The executable contains C source but links a C++ static library.
+# This makes CMake invoke the C++ linker and include its runtime automatically.
+set_target_properties(doom PROPERTIES
+    LINKER_LANGUAGE CXX
 )
 
 if(UNIX)

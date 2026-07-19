@@ -36,6 +36,7 @@ rcsid[] = "$Id: i_x.c,v 1.6 1997/02/03 22:45:10 b1 Exp $";
 #include <errno.h>
 #include <signal.h>
 
+
 #include <raylib.h>
 // raylib aliases to not conflict with doom
 enum
@@ -48,7 +49,7 @@ enum
     RL_KEY_PAUSE       = KEY_PAUSE,
     RL_KEY_EQUAL       = KEY_EQUAL,
     RL_KEY_MINUS       = KEY_MINUS,
-
+    
     RL_KEY_F1          = KEY_F1,
     RL_KEY_F2          = KEY_F2,
     RL_KEY_F3          = KEY_F3,
@@ -63,6 +64,7 @@ enum
     RL_KEY_F12         = KEY_F12
 };
 
+#include "i_sound.h"
 
 #include "doomstat.h"
 #include "i_system.h"
@@ -441,6 +443,9 @@ static byte colors[256][3]; // palette
 //
 void I_FinishUpdate(void)
 {
+
+    I_UpdateMusic();
+
     const int pixel_count = SCREENWIDTH * SCREENHEIGHT;
 
     for (int i = 0; i < pixel_count; ++i)
@@ -554,6 +559,8 @@ void I_InitGraphics(void)
     SetTraceLogLevel(LOG_NONE);
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
 	InitWindow(SCREENWIDTH * 2, SCREENHEIGHT * 2, "DOOM");
+
+    DisableCursor();
 
     Image img = GenImageColor(SCREENWIDTH, SCREENHEIGHT, GRAY);
     I_buffer = LoadTextureFromImage(img);

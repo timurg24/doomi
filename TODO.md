@@ -1,6 +1,11 @@
 # DoomI:
-- Add back audio (1/2 - SFX, no Music yet)
-- Add back networking
+- [x] Add back audio
+- [ ] Rewrite input system
+- [ ] Add cheats console (IDDQD does not work right now)
+- [ ] Add back networking (on request)
+- [ ] Add True 3D
+  - Add more cool effects (including lights and shadows)
+- [ ] `.ipk3` support
 
 # Original DOOM:
 - remove m_fixed, switch to floating point

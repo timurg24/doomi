@@ -571,6 +571,39 @@ void D_AddFile (char *file)
     wadfiles[numwadfiles] = newfile;
 }
 
+void SetGameVersion(const char* iwad) {
+	if (strstr(iwad, "doom2.wad") != NULL ||
+		strstr(iwad, "DOOM2.WAD") != NULL)
+	{
+		gamemode = commercial;
+	}
+	else if (strstr(iwad, "plutonia.wad") != NULL ||
+			strstr(iwad, "PLUTONIA.WAD") != NULL)
+	{
+		gamemode = commercial;
+	}
+	else if (strstr(iwad, "tnt.wad") != NULL ||
+			strstr(iwad, "TNT.WAD") != NULL)
+	{
+		gamemode = commercial;
+	}
+	else if (strstr(iwad, "doomu.wad") != NULL ||
+			strstr(iwad, "DOOMU.WAD") != NULL)
+	{
+		gamemode = retail;
+	}
+	else if (strstr(iwad, "doom1.wad") != NULL ||
+			strstr(iwad, "DOOM1.WAD") != NULL)
+	{
+		gamemode = shareware;
+	}
+	else if (strstr(iwad, "doom.wad") != NULL ||
+			strstr(iwad, "DOOM.WAD") != NULL)
+	{
+		gamemode = registered;
+	}
+}
+
 //
 // IdentifyVersion
 // Checks availability of IWAD files by name,
@@ -592,6 +625,17 @@ void IdentifyVersion (void)
 	boolean paramOverride = false;
 	int p = M_CheckParm("-iwad");
 
+	if(myargc > 1) {
+		const char* ext = strrchr(myargv[1], '.');
+		// windows drag and drop support
+		if (ext != NULL && strcasecmp(ext, ".wad") == 0)
+		{
+			D_AddFile((char*)ext);
+			SetGameVersion(ext);
+		}
+	}
+
+
 	if(p) {
 		if (p + 1 >= myargc)
         	I_Error("-iwad requires a WAD filename");
@@ -600,6 +644,7 @@ void IdentifyVersion (void)
 		D_AddFile((char*) iwad);
 		paramOverride = true;
 
+<<<<<<< HEAD
 		if (strstr(iwad, "doom2.wad") != NULL)
 		{
 			gamemode = commercial;
@@ -625,6 +670,9 @@ void IdentifyVersion (void)
 			gamemode = registered;
 		}
 		return;
+=======
+		SetGameVersion(iwad);
+>>>>>>> 7815164e806d8cb378f528ccfa0a6b4d58d4a355
 	}
 
 // #ifdef NORMALUNIX
@@ -633,38 +681,36 @@ void IdentifyVersion (void)
 	doomwaddir = ".";
 
     // Commercial.
-    doom2wad = malloc(strlen(doomwaddir)+1+9+1);
+    doom2wad = malloc(strlen(doomwaddir) + strlen("/doom2.wad") + 1);
     sprintf(doom2wad, "%s/doom2.wad", doomwaddir);
 
     // Retail.
-    doomuwad = malloc(strlen(doomwaddir)+1+8+1);
+    doomuwad = malloc(strlen(doomwaddir) + strlen("/doomu.wad") + 1);
     sprintf(doomuwad, "%s/doomu.wad", doomwaddir);
     
     // Registered.
-    doomwad = malloc(strlen(doomwaddir)+1+8+1);
+    doomwad = malloc(strlen(doomwaddir) + strlen("/doom.wad") + 1);
     sprintf(doomwad, "%s/doom.wad", doomwaddir);
     
     // Shareware.
-    doom1wad = malloc(strlen(doomwaddir)+1+9+1);
+    doom1wad = malloc(strlen(doomwaddir) + strlen("/doom1.wad") + 1);
     sprintf(doom1wad, "%s/doom1.wad", doomwaddir);
 
      // Bug, dear Shawn.
     // Insufficient malloc, caused spurious realloc errors.
-    plutoniawad = malloc(strlen(doomwaddir)+1+/*9*/12+1);
+    plutoniawad = malloc(strlen(doomwaddir) + strlen("/plutonia.wad") + 1);
     sprintf(plutoniawad, "%s/plutonia.wad", doomwaddir);
 
-    tntwad = malloc(strlen(doomwaddir)+1+9+1);
+    tntwad = malloc(strlen(doomwaddir) + strlen("/tnt.wad") + 1);
     sprintf(tntwad, "%s/tnt.wad", doomwaddir);
 
 
     // French stuff.
-    doom2fwad = malloc(strlen(doomwaddir)+1+10+1);
+    doom2fwad = malloc(strlen(doomwaddir) + strlen("/doom2f.wad") + 1);
     sprintf(doom2fwad, "%s/doom2f.wad", doomwaddir);
-// TODO: Fix for Windows
+// TODO: Fix for Windows -- not needed?
     // home = getenv("HOME");
 	home = ".";
-    if (!home)
-      I_Error("Please set $HOME to your home directory");
     sprintf(basedefault, "%s/.doomrc", home);
 // #endif
 
