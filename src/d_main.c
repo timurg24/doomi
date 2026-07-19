@@ -644,7 +644,6 @@ void IdentifyVersion (void)
 		D_AddFile((char*) iwad);
 		paramOverride = true;
 
-<<<<<<< HEAD
 		if (strstr(iwad, "doom2.wad") != NULL)
 		{
 			gamemode = commercial;
@@ -670,9 +669,7 @@ void IdentifyVersion (void)
 			gamemode = registered;
 		}
 		return;
-=======
 		SetGameVersion(iwad);
->>>>>>> 7815164e806d8cb378f528ccfa0a6b4d58d4a355
 	}
 
 // #ifdef NORMALUNIX
