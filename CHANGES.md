@@ -2,7 +2,7 @@
 - Removed command line arguments:
 	- `-cdrom`
 - Adde command line arguments:
-	- `-iwad` - Loads WAD file
+	- `-iwad` - Loads WAD file (inputed WAD name must be in all lower case)
 - Keybinds:
 	- Added support for WASD movement
 - Removed features:

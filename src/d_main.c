@@ -600,36 +600,31 @@ void IdentifyVersion (void)
 		D_AddFile((char*) iwad);
 		paramOverride = true;
 
-		if (strstr(iwad, "doom2.wad") != NULL ||
-			strstr(iwad, "DOOM2.WAD") != NULL)
+		if (strstr(iwad, "doom2.wad") != NULL)
 		{
 			gamemode = commercial;
 		}
-		else if (strstr(iwad, "plutonia.wad") != NULL ||
-				strstr(iwad, "PLUTONIA.WAD") != NULL)
+		else if (strstr(iwad, "plutonia.wad") != NULL)
 		{
 			gamemode = commercial;
 		}
-		else if (strstr(iwad, "tnt.wad") != NULL ||
-				strstr(iwad, "TNT.WAD") != NULL)
+		else if (strstr(iwad, "tnt.wad") != NULL)
 		{
 			gamemode = commercial;
 		}
-		else if (strstr(iwad, "doomu.wad") != NULL ||
-				strstr(iwad, "DOOMU.WAD") != NULL)
+		else if (strstr(iwad, "doomu.wad") != NULL)
 		{
 			gamemode = retail;
 		}
-		else if (strstr(iwad, "doom1.wad") != NULL ||
-				strstr(iwad, "DOOM1.WAD") != NULL)
+		else if (strstr(iwad, "doom1.wad") != NULL)
 		{
 			gamemode = shareware;
 		}
-		else if (strstr(iwad, "doom.wad") != NULL ||
-				strstr(iwad, "DOOM.WAD") != NULL)
+		else if (strstr(iwad, "doom.wad") != NULL)
 		{
 			gamemode = registered;
 		}
+		return;
 	}
 
 // #ifdef NORMALUNIX
