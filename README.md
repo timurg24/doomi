@@ -7,9 +7,12 @@ DoomImproved - Doom that ditches the old video and audio code for Raylib
 ## Platforms
 - GNU/Linux
 - Windows
+- MacOS
 
 ## Building
-All dependencies will be either found on the system or installed via FetchContent. Just run the CMake and then compile with your build system of choice.
+All dependencies will be either found on the system or installed via FetchContent.
+
+ Just run the CMake and then compile with your build system of choice.
 
 ## Features
 See `CHANGES.md` for all the changes made.
