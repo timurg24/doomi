@@ -108,19 +108,11 @@ static int xlatekey(int key)
         case KEY_RIGHT:
             return KEY_RIGHTARROW;
 
-        case KEY_S:
         case KEY_DOWN:
             return KEY_DOWNARROW;
 
-        case KEY_W:
         case KEY_UP:
             return KEY_UPARROW;
-
-        case KEY_A:
-            return ',';
-
-        case KEY_D:
-            return '.';
 
         /* General controls */
         case RL_KEY_ESCAPE:
@@ -310,10 +302,10 @@ void I_GetEvent(void)
     PostKeyEvent(KEY_DOWN,        KEY_DOWNARROW);
     PostKeyEvent(KEY_UP,          KEY_UPARROW);
 
-    PostKeyEvent(KEY_W,           KEY_UPARROW);
-    PostKeyEvent(KEY_S,           KEY_DOWNARROW);
-    PostKeyEvent(KEY_A,           ',');
-    PostKeyEvent(KEY_D,           '.');
+    PostKeyEvent(KEY_W, 'w');
+    PostKeyEvent(KEY_S, 's');
+    PostKeyEvent(KEY_A, 'a');
+    PostKeyEvent(KEY_D, 'd');
 
     PostKeyEvent(RL_KEY_ESCAPE,   KEY_ESCAPE);
     PostKeyEvent(RL_KEY_ENTER,    KEY_ENTER);
