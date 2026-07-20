@@ -6,6 +6,10 @@
 - [ ] Add True 3D
   - Add more cool effects (including lights and shadows)
 - [ ] `.ipk3` support
+  - [x] Maps
+  - [ ] Graphics
+  - [ ] Audio
+  - [ ] Control files
 
 # Original DOOM:
 - remove m_fixed, switch to floating point
