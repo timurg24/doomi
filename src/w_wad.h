@@ -31,10 +31,10 @@
 #include <stddef.h>
 
 #define MAX_VIRTUAL_WADS 129
-#define DATA_VIRTUAL_WAD 0 // this one will store all of the data except maps
+#define RESOURCE_VIRTUAL_WAD 0 // this one will store all of the data except maps
 
 extern void *virtual_wads[MAX_VIRTUAL_WADS];
-extern size_t virtual_wad_sizes[MAX_VIRTUAL_WADS];
+extern size_t resource_wad_size;
 extern int virtual_wad_index;
 
 

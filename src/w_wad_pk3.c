@@ -4,8 +4,76 @@
 #include "miniz.h"
 
 void *virtual_wads[MAX_VIRTUAL_WADS];
-size_t virtual_wad_sizes[MAX_VIRTUAL_WADS];
-int virtual_wad_index = DATA_VIRTUAL_WAD + 1;
+size_t resource_wad_size = 0;
+int virtual_wad_index = RESOURCE_VIRTUAL_WAD + 1;
+
+/// @brief Copies some data into virtual wad #0 and appends it to the lumpinfo and cache
+/// @param Data Data
+/// @param size Data size
+void CopyDataToLump(
+    char name[9],
+    void *data,
+    size_t data_size
+) {
+    if (data == NULL || data_size == 0) I_Error("Lump \"%s\" has no data", name);
+
+    // resize res wad
+    void *new_resource_array = realloc(
+        virtual_wads[RESOURCE_VIRTUAL_WAD],
+        resource_wad_size + data_size
+    );
+
+    if(!new_resource_array) I_Error("Couldn't realloc resource virtual WAD for lump \"%s\"", name);
+
+    virtual_wads[RESOURCE_VIRTUAL_WAD] = new_resource_array;
+    
+    // copy
+    memcpy(
+        (byte *)new_resource_array + resource_wad_size,
+        data,
+        data_size
+    );
+    
+    // lumps
+    int startlump = numlumps;
+    
+    // lumpinfo
+    numlumps++;
+    lumpinfo_t *new_lumpinfo = realloc(
+    lumpinfo,
+    (size_t)numlumps * sizeof(*lumpinfo)
+);
+
+if (!new_lumpinfo)
+    I_Error("Couldn't realloc lumpinfo for lump \"%s\" in virtual WAD", name);
+
+lumpinfo = new_lumpinfo;
+    // lumpcache
+    void **new_lumpcache = realloc(
+        lumpcache,
+        (size_t)numlumps * sizeof(*lumpcache)
+    );
+    
+    if(!new_lumpcache) I_Error("Couldn't realloac lumpcache for virtual WAD");
+    
+    lumpcache = new_lumpcache;
+    
+    memset(
+        &lumpcache[startlump],
+        0,
+        sizeof(*lumpcache)
+    );
+    lumpinfo_t *lump_i = &lumpinfo[startlump];
+    lump_i->handle = RESOURCE_VIRTUAL_WAD;
+    lump_i->position = resource_wad_size;
+    lump_i->size = data_size;
+    lump_i->virtual_origin = true;
+    
+    memset(lump_i->name, 0, 8);
+    memcpy(lump_i->name, name, strlen(name) < 8 ? strlen(name) : 8);
+    resource_wad_size += data_size;
+}
+
 
 /// @brief Adds a Map WAD to a virtual wad
 /// @param name Lump name
@@ -23,8 +91,8 @@ void AddMapToVirtualWad(
 
     if (data == NULL || data_size < sizeof(wadinfo_t)) I_Error("Archived WAD/Map \"%s\" has no data", name);
     if (memcmp(data, "IWAD", 4) != 0 &&
-    memcmp(data, "PWAD", 4) != 0)
-    I_Error("Archived WAD/Map \"%s\" has invalid header", name);
+        memcmp(data, "PWAD", 4) != 0)
+            I_Error("Archived WAD/Map \"%s\" has invalid header", name);
     
     if(virtual_wad_index >= MAX_VIRTUAL_WADS) I_Error("Too many Virtual WADS (%u/%u)", virtual_wad_index, MAX_VIRTUAL_WADS); 
 
