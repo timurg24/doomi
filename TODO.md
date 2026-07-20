@@ -10,7 +10,7 @@
   - [x] Maps
   - [ ] Graphics
   - [ ] Audio
-  - [ ] Control files
+  - [x] Control files
 
 # Original DOOM:
 - remove m_fixed, switch to floating point

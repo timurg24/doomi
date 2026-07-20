@@ -263,9 +263,9 @@ void W_AddPK3(const char *filename) {
         const char* extension = strrchr(path, '.');
         if(extension == NULL) {
             if(IsControlFile(path)) {
-                /*
-                    Handle control files
-                */
+                char lumpname[9];
+                snprintf(lumpname, sizeof(lumpname), "%.*s", (int)(extension - (strrchr(path, '/') ? strrchr(path, '/') + 1 : path)), strrchr(path, '/') ? strrchr(path, '/') + 1 : path);
+                CopyDataToLump(lumpname, data, data_size);
             }
             mz_free(data);
             continue;
