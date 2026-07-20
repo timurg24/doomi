@@ -546,6 +546,9 @@ void I_InitGraphics(void)
     if (M_CheckParm("-4"))
 	multiply = 4;
 
+    if (M_CheckParm("-5"))
+    multiply = 5;
+
     X_width = SCREENWIDTH * multiply;
     X_height = SCREENHEIGHT * multiply;
 
@@ -558,7 +561,7 @@ void I_InitGraphics(void)
 
     SetTraceLogLevel(LOG_NONE);
     SetConfigFlags(FLAG_WINDOW_RESIZABLE);
-	InitWindow(SCREENWIDTH * 2, SCREENHEIGHT * 2, "DOOM");
+	InitWindow(SCREENWIDTH * multiply, SCREENHEIGHT * multiply, "DOOM");
 
     DisableCursor();
 
