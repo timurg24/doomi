@@ -40,14 +40,14 @@ void CopyDataToLump(
     // lumpinfo
     numlumps++;
     lumpinfo_t *new_lumpinfo = realloc(
-    lumpinfo,
-    (size_t)numlumps * sizeof(*lumpinfo)
-);
+        lumpinfo,
+        (size_t)numlumps * sizeof(*lumpinfo)
+    );
 
-if (!new_lumpinfo)
-    I_Error("Couldn't realloc lumpinfo for lump \"%s\" in virtual WAD", name);
+    if (!new_lumpinfo)
+        I_Error("Couldn't realloc lumpinfo for lump \"%s\" in virtual WAD", name);
 
-lumpinfo = new_lumpinfo;
+    lumpinfo = new_lumpinfo;
     // lumpcache
     void **new_lumpcache = realloc(
         lumpcache,
