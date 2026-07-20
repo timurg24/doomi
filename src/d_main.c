@@ -623,8 +623,8 @@ void IdentifyVersion (void)
     char*	tntwad;
 
 	boolean paramOverride = false;
-	int p = M_CheckParm("-iwad");
-
+	int iwadparm = M_CheckParm("-iwad");
+	
 	if(myargc > 1) {
 		const char* ext = strrchr(myargv[1], '.');
 		// windows drag and drop support
@@ -634,16 +634,15 @@ void IdentifyVersion (void)
 			SetGameVersion(ext);
 		}
 	}
-
-
-	if(p) {
-		if (p + 1 >= myargc)
-        	I_Error("-iwad requires a WAD filename");
+	
+	if(iwadparm) {
+		if (iwadparm + 1 >= myargc)
+		I_Error("-iwad requires a WAD filename");
 		
-		const char *iwad = myargv[p + 1];
+		const char *iwad = myargv[iwadparm + 1];
 		D_AddFile((char*) iwad);
 		paramOverride = true;
-
+		
 		if (strstr(iwad, "doom2.wad") != NULL)
 		{
 			gamemode = commercial;
@@ -1111,7 +1110,13 @@ void D_DoomMain (void)
 
     printf ("W_Init: Init WADfiles.\n");
     W_InitMultipleFiles (wadfiles);
-    
+    int pkparm = M_CheckParm("-pk3");
+	if(pkparm) {
+		if (pkparm + 1 >= myargc)
+        	I_Error("-pk3 requires a PK3 filename");
+		const char* pk3Name = myargv[pkparm + 1];
+		W_AddPK3(pk3Name);
+	}
 
     // Check for -file in shareware
     if (modifiedgame)
@@ -1146,10 +1151,9 @@ void D_DoomMain (void)
 	    "ATTENTION:  This version of DOOM has been modified.  If you would like to\n"
 	    "get a copy of the original game, call 1-800-IDGAMES or see the readme file.\n"
 	    "        You will not receive technical support for modified games.\n"
-	    "                      press enter to continue\n"
+	    "\n"
 	    "===========================================================================\n"
 	    );
-	getchar ();
     }
 	
 

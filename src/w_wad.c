@@ -233,6 +233,7 @@ void W_AddFile (char *filename)
 	lump_p->handle = storehandle;
 	lump_p->position = LONG(fileinfo->filepos);
 	lump_p->size = LONG(fileinfo->size);
+    lump_p->virtual_origin = false;
 	strncpy (lump_p->name, fileinfo->name, 8);
     }
 	
@@ -458,7 +459,20 @@ W_ReadLump
     l = lumpinfo+lump;
 	
     // ??? I_BeginRead ();
+
+    // virtual wads
+    if(l->virtual_origin) {
+        if(l->handle < 0) I_Error("W_ReadLump: invalid virtual wad handle");
+        handle = l->handle;
+        memcpy(
+            dest,
+            (byte *)virtual_wads[handle] + l->position,
+            l->size
+        );
+        return;
+    }
 	
+    // fs wads
     if (l->handle == -1)
     {
 	// reloadable file, so use open / read / close

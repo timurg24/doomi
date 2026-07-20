@@ -3,10 +3,14 @@
 	- `-cdrom`
 - Adde command line arguments:
 	- `-iwad` - Loads WAD file (inputed WAD name must be in all lower case)
+	- `-pk3` - Loads a .pk3 archive
+	- `-5` - window size multiplier
 - Keybinds:
 	- Added support for WASD movement
 - Removed features:
 	- Multiplayer
+- Startup:
+	- Removed need to press enter when playing modded games
 
 # Technical
 - x64 changes as explained by [Diego Crespo](https://www.deusinmachina.net/p/lets-compile-linux-doom)

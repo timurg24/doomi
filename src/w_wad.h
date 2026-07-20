@@ -27,6 +27,15 @@
 #ifdef __GNUG__
 #pragma interface
 #endif
+#include "doomtype.h"
+#include <stddef.h>
+
+#define MAX_VIRTUAL_WADS 129
+#define DATA_VIRTUAL_WAD 0 // this one will store all of the data except maps
+
+extern void *virtual_wads[MAX_VIRTUAL_WADS];
+extern size_t virtual_wad_sizes[MAX_VIRTUAL_WADS];
+extern int virtual_wad_index;
 
 
 //
@@ -59,6 +68,7 @@ typedef struct
     int		handle;
     int		position;
     int		size;
+    boolean virtual_origin; // if true, it will read from the virtual_wads
 } lumpinfo_t;
 
 
@@ -66,7 +76,7 @@ extern	void**		lumpcache;
 extern	lumpinfo_t*	lumpinfo;
 extern	int		numlumps;
 
-void    W_AddPK3(char *filename);
+void    W_AddPK3(const char *filename);
 void    W_InitMultipleFiles (char** filenames);
 void    W_Reload (void);
 
