@@ -27,6 +27,7 @@ set(DOOM_SOURCES
 
     # custom sources
     src/w_wad_pk3.c
+    src/w_wad_pk3_convert.c
 
     src/i_net.c
     src/tables.c
@@ -184,4 +185,12 @@ set_target_properties(doom PROPERTIES
 
 if(UNIX)
     target_compile_definitions(doom PRIVATE NORMALUNIX)
+endif()
+
+if(WIN32 AND CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    target_link_options(doom PRIVATE
+        -static-libgcc
+        -static-libstdc++
+        -static
+    )
 endif()
