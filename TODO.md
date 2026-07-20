@@ -1,7 +1,8 @@
 # DoomI:
 - [x] Add back audio
 - [ ] Rewrite input system
-- [ ] Add cheats console (IDDQD does not work right now)
+- [x] ~~Add cheats console (IDDQD does not work right now)~~
+  - Cheats now work
 - [ ] Add back networking (on request)
 - [ ] Add True 3D
   - Add more cool effects (including lights and shadows)
