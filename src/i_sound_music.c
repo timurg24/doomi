@@ -23,7 +23,7 @@
 #include <raylib.h>
 #include <adlmidi.h>
 
-#define MAX_REGISTERED_SONGS 16
+#define MAX_REGISTERED_SONGS 1
 #define MUSIC_FRAMES 2048
 #define MUSIC_CHANNELS 2
 
