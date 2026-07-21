@@ -27,7 +27,7 @@ set(DOOM_SOURCES
 
     # custom sources
     src/w_wad_pk3.c
-    src/w_wad_pk3_convert.c
+    # src/w_wad_pk3_convert.c
 
     src/i_net.c
     src/tables.c
